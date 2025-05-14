@@ -1,0 +1,161 @@
+
+.header {
+    margin: 80px auto;
+    background-size: contain;
+    max-width: 1180px;
+    width: 100vw;
+    padding: 10px;
+}
+
+.header-content {
+    align-items: center;
+    gap: 9.5rem;
+    display: flex;             
+}
+
+.header-content .text-initial{
+    font-family: "Open Sans", serif;
+    font-size: 29px;
+    font-weight: bold;
+}
+
+.header-content .header-logo{
+    width: 22vw;
+    height: auto;
+    margin-bottom: 5%;
+}
+
+.header-img {
+    width: 25vw;
+    height: auto;
+}
+
+.header button{
+    font-size: 1.5vw;
+    padding: 1.2vw 1.4vw;
+    margin-top: 35px;
+}
+
+@media (max-width: 860px) {
+    .header-content {
+        gap: 5rem;   
+        align-items: center;
+        overflow-x: hidden;         
+    }
+    .header-content .color-1{
+        font-size: 80px;
+    }
+    .header-content .color-2{
+        font-size: 80px;
+    }
+    .header-img {
+        width: 40vw;
+        height: auto;
+    }
+    .header-content .header-start.text-initial{
+        font-size:  30px;
+    }
+    .header .button-register{
+        font-size: 14px;
+        padding: 0.7rem 0.8rem;
+    }
+}
+
+@media (max-width: 769px) {
+    .header-content {
+        gap: 3rem;  
+        align-items: center;         
+    }
+    .header-content .color-1{
+        font-size: 48px;
+    }
+    .header-content .color-2{
+        font-size: 48px;
+    }
+    .header-img {
+        width: 40vw;
+        height: auto;
+    }
+    .header-content .header-start .text-initial{
+        font-size:  28px;
+    }
+    .header .button-register{
+        font-size: 12px;
+        padding: 0.7rem 0.8rem;
+    }
+}
+
+@media (max-width: 500px) {
+    .header-content {
+        gap: 2rem;   
+        align-items: center;         
+    }
+    .header-content .color-1{
+        font-size: 46px;
+    }
+    .header-content .color-2{
+        font-size: 46px;
+    }
+    .header-img {
+        width: 40vw;
+        height: auto;
+    }
+    .header-content .header-start .text-initial{
+        font-size: 18px;
+    }
+    .header .button-register{
+        font-size: 10px;
+        padding: 0.7rem 0.8rem;
+    }
+}
+
+@media (max-width: 415px) {
+    .header{
+        margin: 20px 0px;
+    }
+    .header-content {
+        display: flex;
+        gap: 2rem;  
+        align-items: flex-start; 
+        flex-direction: column;        
+    }
+    .header-content .color-1{
+        font-size: 48px;
+    }
+    .header-content .color-2{
+        font-size: 48px;
+    }
+    .header-content .header-start .text-initial{
+        font-size: 15px;
+    }
+    .header-content .header-logo{
+        width: 10rem;
+        height: auto;
+    }
+    .header-img {
+        width: 38vw;
+        height: auto;
+    }
+    .header .btn.green{
+        margin-top: 20px;
+        font-size: 10px;
+    }
+}
+
+@media (max-width: 376px) {
+    .header-content {
+        gap: 1rem;     
+    }
+    .header-content .color-1{
+        font-size: 50px;
+    }
+    .header-content .color-2{
+        font-size: 50px;
+    }
+    .header-content .header-start .text-initial{
+        font-size: 16px;
+    }
+    .header .button-register{
+        margin-top: 30px;
+    }
+}

@@ -1,0 +1,52 @@
+.carrossel-container {
+    width: 60%;
+    margin: 0 auto;
+    text-align: center;
+  }
+  
+  .carrossel-container img {
+    width: 40%;
+    height: auto;
+    border-radius: 10px;
+  }
+  
+  .carrossel-container button {
+    margin-top: 10px;
+    padding: 10px;
+    color: rgba(0, 42, 58, 1);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+  }
+  
+  .carrossel-container button:hover {
+    background-color: #0056b3;
+  }
+
+
+  @media (max-width: 1024px) {
+    .titulo-parceiros{
+      font-size: 17px;
+     
+    }
+  
+  }
+  
+  /* Media query para telas menores que 768px (Celulares em modo paisagem e tablets pequenos) */
+  @media (max-width: 768px) {
+    .titulo-parceiros {
+      font-size: 17px;
+
+    }
+  
+   
+  }
+  
+  /* Media query para telas menores que 480px (Celulares) */
+  @media (max-width: 480px) {
+    .titulo-parceiros{
+      font-size: 17px;
+      
+    }
+  }
+  

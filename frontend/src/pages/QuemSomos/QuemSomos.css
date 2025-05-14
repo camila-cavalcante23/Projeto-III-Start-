@@ -1,0 +1,94 @@
+
+.about {
+    margin: 0px auto;
+    padding: 20px;
+    max-width: 1480px;
+    width: 100vw;
+}
+
+.about-us{
+    margin-top: 3%;
+    font-family: "Gabarito", serif;
+    font-size: 2rem;
+    font-weight: 500;
+}
+
+.about-content{
+    margin-top: 2%;
+    font-family: "Open Sans", serif;
+    font-size: 2vw;
+    align-items: center;
+    gap: 5vw;
+    display: flex; 
+}
+
+.img{
+    width: 35vw;
+    height: auto;
+}
+
+.text-about-1 p{
+    margin-top: 1%;
+    font-size: 1.5vw;
+    font-weight: normal;
+    font-family: "Open Sans", serif;
+}
+
+p.supporters{
+    font-weight: bolder;
+}
+
+@media (max-width: 500px) {
+    .about-us{
+        font-size: 22px;
+    }
+    .about-content{
+        font-size: 18px;
+        flex-direction: column;         
+    }
+    .img{
+        margin-top: 4%;
+        width: 55vw;
+        height: auto;
+    }
+    .text-about-1 p{
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 415px) {
+    .about-us{
+        font-size: 22px;
+    }
+    .about-content{
+        font-size: 18px;
+        flex-direction: column;         
+    }
+    .img{
+        margin-top: 4%;
+        width: 55vw;
+        height: auto;
+    }
+    .text-about-1 p{
+        font-size: 14px;
+    }
+    
+}
+
+@media (max-width: 391px) {
+    .about-us{
+        font-size: 22px;
+    }
+    .about-content{
+        font-size: 18px;
+        flex-direction: column;         
+    }
+    .img{
+        margin-top: 4%;
+        width: 55vw;
+        height: auto;
+    }
+    .text-about-1 p{
+        font-size: 12px;
+    }
+}
