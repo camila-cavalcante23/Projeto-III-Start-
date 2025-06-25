@@ -27,7 +27,7 @@ const Header = () => {
            </Link>
           </div>
 
-          {/* A imagem da direita, que fica separada */}
+ 
           <img src={Image} alt="Ilustração" className='header-img' />
 
         </div>

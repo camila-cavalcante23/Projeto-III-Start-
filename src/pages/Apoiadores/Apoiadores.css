@@ -1,45 +1,81 @@
 
-.titulo-parceiros {
-    margin-top: 1%;
+.apoiadores-page-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; 
+    background-color: #f8f9fa; 
+}
+
+
+.apoiadores-container {
+    max-width: 1180px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 3rem 1rem;
+   
+    flex-grow: 1; 
+}
+
+
+.main-title {
     font-family: "Gabarito", serif;
-    font-size: 2.5vw;
-    font-weight: bolder;
+    font-size: 2.5rem;
+    color: #002A3A;
+    margin-bottom: 3rem;
 }
 
-.geralparceiros{
-    margin: 0px auto;
-    padding: 10px 50px;
-    max-width: 100%;
-    width: 100vw;
+.supporter-block {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    margin-bottom: 4rem;
 }
 
-.geralparceiros .partners{
+.supporter-info {
+    flex: 2;
+}
+
+.supporter-info h2 {
+    font-family: "Gabarito", serif;
+    font-size: 2rem;
+    color: #002A3A;
+    margin: 0 0 1rem 0;
+}
+
+.supporter-info p {
     font-family: "Open Sans", serif;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #555;
+    text-align: justify;
+    margin: 0;
 }
 
-.partners .titulo2{
-    margin-top: 50px;
-    font-size: 25px;
-    font-weight: 600;
+.supporter-logo {
+    flex: 1;
+    text-align: center;
 }
 
-.partners .conteudo1{
-    font-size: 24px;
+.supporter-logo img {
+    max-width: 250px;
+    height: auto;
 }
 
-.partners .titulo-cd{
-    margin-top: 50px;
-    font-size: 25px;
-    font-weight: 600;
+@media (max-width: 768px) {
+    .main-title {
+        text-align: center;
+    }
+    
+    .supporter-block {
+        flex-direction: column-reverse;
+        gap: 2rem;
+    }
+    
+    .supporter-info {
+        text-align: center;
+    }
+
+    .supporter-info p {
+        text-align: left;
+    }
 }
-
-.partners .corredores-content{
-    font-size: 24px;
-}
-
-
-
-
-
-
- 
