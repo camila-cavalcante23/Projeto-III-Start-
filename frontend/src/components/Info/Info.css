@@ -1,136 +1,90 @@
 
-.grid{
-  margin: 0px auto;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr); 
-  grid-template-rows: repeat(2, 190px); 
-  gap: 4vw; 
-  padding: 6vw; 
-  width: 99vw;  
-  height: auto; 
+.info-section {
+    max-width: 1180px;
+    margin: 8rem auto;
+    padding: 0 1rem;
 }
 
-.grid div {
-  display: flex;
-  justify-content: center;
-  font-size: 1.5vw;
-  text-align: center;
-  width: 100%; 
-  height: auto; 
-  padding: 30px;
-  flex-direction: column;
-  align-items: flex-end;
+
+.info-grid {
+    display: grid;
+    /* 4 colunas de tamanho igual */
+    grid-template-columns: repeat(4, 1fr);
+    /* Define a altura das linhas para criar cards quadrados */
+    grid-auto-rows: minmax(180px, 1fr);
+    gap: 1.5rem; /* Espaçamento consistente */
 }
 
-@media (max-width: 760px) {
-  .grid {
-    grid-template-columns: repeat(4, 1fr); 
-    grid-template-rows: repeat(2, 20vw); 
-  }
-  .grid div{
-    flex-direction: row;
+/* Estilo base para TODOS os cards */
+.info-box {
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+    display: flex;
     align-items: center;
-  }
+    justify-content: center;
+    position: relative; 
+    overflow: hidden;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
-@media (max-width: 640px) {
-  .grid {
-    grid-template-columns: repeat(4, 1fr); 
-    grid-template-rows: repeat(2, 10vw); 
-  }
-  .grid div{
-    flex-direction: row;
-    align-items: center;
-  }
+.logo-box {
+    /* FAZ O LOGO OCUPAR DUAS COLUNAS */
+    grid-column: span 2;
+    background-color: transparent;
+    box-shadow: none;
+
 }
 
-@media (max-width: 580px) {
-  .grid {
-    grid-template-columns: repeat(2, 1fr); 
-    grid-template-rows: repeat(4, 20vw);
-  }
-  .grid div{
-    flex-direction: row;
-    align-items: center;
-    font-size: 3vw;
-  }
+
+.logo-box:hover {
+    transform: none;
+    box-shadow: none;
 }
 
-@media (max-width: 760px) {
-  .box5 {
-    width: 100%;
+
+.logo-box img {
+    width: 80%; 
     height: auto;
-  }
+    object-fit: contain; /* Garante que a imagem caiba sem distorcer */
+}
+
+.dark-box {
+    background-color: #002A3A; /* Cor escura */
+    color: white;
+}
+
+.green-box {
+    background-color: #38D430; /* Cor verde */
+    color: #002A3A;
+}
+
+/* Estilo do texto dentro dos cards */
+.box-text {
+    font-family: "Gabarito", serif;
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+/* Estilo e posição do ícone */
+.box-icon {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 1.5rem;
+    
 }
 
 
-.box1 {
-  align-items: center;
-  background-image: url('../../assets/StartUFC-logo.png');
-  background-size: 18vw;
-  background-repeat: no-repeat;
-  background-position: center center;
-  
-}
 
-.box2 {
-  background-color: #38D430;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  
-
-}
-
-.box3 {
-  background-color: #001D3D;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  color: #38D430;
-
-}
-
-.box4 {
-  background-color: #38D430;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-
-}
+@media (max-width: 768px) {
+    .info-grid {
+    
+        grid-template-columns: repeat(2, 1fr);
+    }
 
 
-.box5 {
-  background-color: #001D3D;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  color: #38D430;
-  border: 1px solid black;
-  
-
-}
-
-.box6 {
-  background-color: #969696;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
- 
-}
-
-.box7 {
-  background-color: #38D430;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
- 
-}
-
-.box8 {
-  background-color: #969696;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
- 
-}
-
-.grid-container .box .grid-text{
-  color: #000;
-  font-family: "Open Sans", serif;
-  text-align: left;
-}
-
-.box3 .grid-text{
-  color: #38D430 !important;
-}
-
-.box5 .grid-text{
-  color: #38D430 !important;
+    .logo-box {
+        grid-column: span 2;
+    }
 }

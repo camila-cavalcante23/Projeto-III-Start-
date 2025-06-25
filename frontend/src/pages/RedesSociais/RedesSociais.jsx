@@ -1,56 +1,41 @@
-import React from "react";
-import "./RedesSociais.css";
-import Footer from "../../components/Footer/Footer";
-import Navbar2 from "../../components/Navbar2/Navbar2";
-import Img1 from '../../assets/email.svg';
-import Img2 from '../../assets/linkedin.svg';
-import Img3 from '../../assets/instagram.svg';
-import Img4 from '../../assets/StartUFC-logo.svg';
-import Img5 from '../../assets/maoC.svg';
+import React from 'react';
+import './RedesSociais.css';
+import { Link } from 'react-router-dom';
+import Navbar2 from '../../components/Navbar2/Navbar2';
+import { FaInstagram, FaLinkedin, FaTiktok } from 'react-icons/fa';
+import { MdOutlineEmail } from 'react-icons/md';
+import Logo from '../../assets/StartUFC-logo.svg';
+import ImgMao from '../../assets/mao_logo.png';
 
 const RedesSociais = () => {
   return (
-    <div>
+
+    <div className="comunicacao-page">
+
       <Navbar2 />
-      <div className="geralRedes">
-        <div className="tudoR">
-          <h1 className="tituloRedes">Canais de comunicação</h1>
 
-          <div className="imagensRedes">
-            {/* Link para o e-mail */}
-            <a href="mailto:frankecion@alu.ufc.br" target="_blank" rel="noopener noreferrer">
-              <div className="icon-container">
-                <div className="background"></div>
-                <img src={Img1} alt="Email" className="email" />
-              </div>
-            </a>
+      <div className="comunicacao-container">
+        <main className="comunicacao-content">
 
-            {/* Link para o LinkedIn */}
-            <a href="https://www.linkedin.com/in/startufc-programa-de-incentivo-ao-empreendedorismo-9bbb61289/" target="_blank" rel="noopener noreferrer">
-              <div className="icon-container">
-                <div className="background linkedin-bg"></div>
-                <img src={Img2} alt="LinkedIn" className="linkedin" />
-              </div>
-            </a>
+  
+          <section className="left-column">
+            <h1>Canais de comunicação</h1>
+            <div className="social-icons-wrapper">
+              <a href="https://www.instagram.com/startufc" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><FaInstagram /></a>
+              <a href="mailto:startufc@crateus.ufc.br" aria-label="Email"><MdOutlineEmail /></a>
+              <a href="https://www.linkedin.com/in/startufc-programa-de-incentivo-ao-empreendedorismo-9bbb61289/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><FaLinkedin /></a>
+              <a href="https://www.tiktok.com/@startufc" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><FaTiktok /></a>
+            </div>
+            <img src={Logo} alt="StartUFC Logo" className="comunicacao-logo" />
+          </section>
 
-            {/* Link para o Instagram */}
-            <a href="https://www.instagram.com/startufc?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer">
-              <div className="icon-container">
-                <div className="background instagram-bg"></div>
-                <img src={Img3} alt="Instagram" className="instagram" />
-              </div>
-            </a>
-          </div>
-
-          <div className="icon-container">
-            <div className="background maoC"></div>
-            <img src={Img5} alt="maoC" className="maoC" />
-          </div>
-
-          <img src={Img4} alt="logo" className="Logo" />
-        </div>
+          
+          <aside className="right-column">
+            <img src={ImgMao} alt="Mão segurando um celular com o perfil do StartUFC" className="mao-celular-img" />
+          </aside>
+          
+        </main>
       </div>
-      <Footer />
     </div>
   );
 };

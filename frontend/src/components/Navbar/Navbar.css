@@ -1,10 +1,13 @@
-
 nav {
     background: #efefef;
     padding: 0.3rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-.navbar{
+.navbar {
     max-width: 1180px;
     width: 100%;
     margin: 0 auto;
@@ -14,57 +17,59 @@ nav {
     padding: 0 1rem;
 }
 
-a {
-    text-decoration: none;
-    padding: 5px;
-    cursor: pointer;
-}
-
-.navbar .navbar-logo{
+.navbar .navbar-logo {
     width: 95px;
+    height: auto;
 }
 
-.navbar .nav-link{
+.navbar .nav-link {
     display: flex;
     align-items: center;
-    font-family: "Gabarito", serif;
-}
-
-.navbar .nav-link li{
-    display: flex;
     list-style: none;
-    margin: 0 0.5rem;
+    margin: 0;
+    padding: 0;
+    gap: 0.5rem;
 }
 
-.navbar .nav-link button{
-    margin-left: 5rem;
-    padding: 0.5rem 3rem;
+.navbar .nav-link li {
+    display: flex;
+    align-items: center;
 }
 
 .navbar .nav-link li a {
-    color: #000000;
-    font-size: 1.3rem;
-    padding: 0.1rem 1rem;
+    color: #333;
+    font-size: 1.4rem;
+    font-family: "Gabarito", sans-serif;
+    padding: 0.5rem 1rem;
     display: block;
-}
-
-.navbar .nav-link li a:hover {
-    background-color: #efefef;
-    border-radius: 10px;
-}
-
-.menu {
-    font-size: 1.5rem;
+    border-radius: 8px;
     cursor: pointer;
-    display: none;
-    border-style: none;
-    background-color: transparent;
+    text-decoration: none;
+    transition: background-color 0.3s, transform 0.3s, text-shadow 0.3s;
+}
+
+
+.navbar .nav-link li > a:hover {
+    text-shadow: 0px 2px 5px rgba(0, 0, 0, 0.15); 
+    transform: translateY(-2px); 
+}
+
+.navbar .nav-link li.login-button-item {
+    transition: transform 0.3s ease-in-out;
+}
+
+.navbar .nav-link li.login-button-item:hover {
+    transform: scale(1.05);
+}
+
+
+.navbar .nav-link .button-container button {
+    margin-left: 2rem;
+    padding: 0.5rem 2.5rem;
 }
 
 .user-menu {
     position: relative;
-    display: flex;
-    align-items: center;
     cursor: pointer;
 }
 
@@ -72,95 +77,148 @@ a {
     display: flex;
     align-items: center;
     gap: 8px;
-    color: white;
-    background-color: #2c3e50;
+    color: #2c3e50;
+    background-color: #e0e0e0;
     padding: 8px 12px;
     border-radius: 20px;
-    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.user-info:hover {
+    background-color: #d1d1d1;
 }
 
 .user-icon {
-    width: 30px;
-    height: 30px;
-    background-color: white;
-    color: #2c3e50;
+    width: 28px;
+    height: 28px;
+    background-color: #2c3e50;
+    color: white;
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 50%;
 }
 
+.chevron-icon {
+    transition: transform 0.3s ease;
+}
+
+.chevron-icon.open {
+    transform: rotate(180deg);
+}
+
 .dropdown-menu {
     position: absolute;
-    top: 100%;
+    top: calc(100% + 10px); /* Espaço entre o botão e o menu */
+    right: 0;
     background: white;
     border-radius: 8px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    min-width: 150px;
-    z-index: 1000;
-}
-
-.user-menu .dropdown-menu .profile-name{
-    margin: 15px 0px;
-    font-size: 18px;
+    min-width: 180px;
+    z-index: 1001; /* Acima da navbar */
+    border: 1px solid #eee;
 }
 
 .dropdown-menu a, .dropdown-menu button {
-    padding: 10px 15px;
+    padding: 12px 18px;
     text-align: left;
     border: none;
     background: none;
     cursor: pointer;
     width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1rem;
+    color: #333;
+    text-decoration: none;
 }
 
 .dropdown-menu a:hover, .dropdown-menu button:hover {
-    background: #f0f0f0;
+    background: #f5f5f5;
 }
 
-@media(max-width: 830px){
-    .navbar{
-        padding: 0 15px;
-    }
-    .navbar-logo {
-        font-size: 2rem;
-        text-align: center;
-    }
+/*  MENU MOBILE */
+.menu {
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: none; /* Escondido em telas grandes */
+    border: none;
+    background-color: transparent;
+    padding: 5px;
+    z-index: 1100; 
+    color: #333;
+}
+
+
+body.menu-aberto {
+    overflow: hidden;
+}
+
+
+
+@media (max-width: 830px) {
     .menu {
-        display: block;
-    } 
-    .navbar .nav-link{
-        flex-direction: column;
-        justify-content: space-evenly;
-        background-color: #efefef;
-        position: absolute;
-        width: 100%;
-        top: -800px;
-        right: 0;
-        z-index: 10;
-        transition: all 0.4s; 
+        display: block; 
     }
-    .nav-link.active{
-        top: 10%;
-        transition: all 0.4s ease-in; 
-        padding: 0;
-        align-items: stretch;
+
+    .navbar .nav-link {
         position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 1.5rem;
+        
+        background-color: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(8px); /* Efeito de vidro fosco */
+        
+        z-index: 1050; /* Z-index alto para cobrir tudo */
+        
+        /* Esconde o menu para fora da tela (à direita) */
+        transform: translateX(100%);
+        transition: transform 0.3s ease-in-out;
     }
-    .nav-link.active li {
-        padding: .5em 0;
-        border-bottom: 1px solid #CCC;
+
+    .nav-link.active {
+        /* Traz o menu de volta para a tela */
+        transform: translateX(0);
     }
-    .nav-link li:last-child {
-        border-bottom: 0;
-    }
-    .nav-link.active button{
-        margin: 40px;
-        display: flex;
+    
+    .navbar .nav-link li {
+        width: 100%;
+        text-align: center;
         justify-content: center;
     }
 
+    .navbar .nav-link li > a {
+        font-size: 1.5rem;
+    }
+    
+    .navbar .nav-link .button-container button {
+        margin-left: 0;
+        padding: 0.8rem 4rem;
+    }
+
+    /* Ajuste para o menu do usuário no modo mobile */
+    .user-menu .dropdown-menu {
+        position: static;
+        box-shadow: none;
+        background: transparent;
+        border: none;
+        align-items: center;
+        margin-top: 1rem;
+        gap: 1.5rem;
+    }
+
+    .user-info {
+        display: none; 
+    }
 }

@@ -1,81 +1,76 @@
-.germinar {
-    margin: 0px auto;
-    padding: 20px;
-    max-width: 1480px;
-    width: 100vw;
+
+.germinar-section {
+    
+    max-width: 1180px;
+    margin: 9rem auto; /* Aumenta o espaço vertical para separar das outras seções */
+    padding: 0 1rem;
+    width: 100%;
 }
 
-.title-g {
-    font-family: "Gabarito", serif;
-    font-size: 2rem;
-    font-weight: 500;
-}
-
-.germinar-content .text-germinar {
+/* Container do conteúdo que cria as colunas */
+.germinar-content {
+    
     display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
-    gap: 10vw;
+    justify-content: space-between;
+    align-items: center;
+    gap: 3rem; /* Espaço entre as colunas */
 }
 
-.text-germinar p{
-    margin-top: 2%;
-    font-size: 26px;
-    font-weight: normal;
-    font-family: 'Open Sans';
+/* Coluna da Esquerda */
+.germinar-left-column {
+    flex: 1; /* Ocupa metade do espaço */
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; /* Espaço entre o logo e o texto */
 }
 
-.img-g{
-    width: 35vw;
+.germinar-logo {
+    width: 300px; /* Tamanho fixo para o logo */
     height: auto;
 }
 
-.germinar .btn-right{
+.germinar-text {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #555;
+    margin: 0;
+}
+
+/* Coluna da Direita */
+.germinar-right-column {
+    flex: 1; /* Ocupa a outra metade do espaço */
     display: flex;
-    justify-content: flex-end;
-    margin: 40px 0px ;
+    flex-direction: column;
+    align-items: flex-end; /* Alinha os itens (botão) à direita */
+    gap: 1.5rem; /* Espaço entre a imagem e o botão */
 }
 
-.btn-right button{
-    padding: 0.4rem 3rem !important;
-    font-weight: 500;
+.germinar-image {
+    width: 90%;
+    height: auto;
+    border-radius: 8px; /* Borda suave na imagem */
 }
 
-@media (max-width: 500px) {
-    .title-g{
-        font-size: 22px;
-    }
-    .germinar-content .text-germinar {
-        flex-direction: column; 
-        gap: 2px; 
-        align-items: center;      
-    }
-    .germinar-content .text-germinar p{
-        font-size: 14px;
-    }
-    .img-g{
-        margin-top: 4%;
-        width: 55vw;
-        height: auto;
-    }
-}
-
-@media (max-width: 415px) {
-    .title-g{
-        font-size: 22px;
-    }
-    .germinar-content .text-germinar {
-        flex-direction: column; 
-        gap: 2px; 
-        align-items: center;      
-    }
-    .img-g{
-        margin-top: 4%;
-        width: 55vw;
-        height: auto;
-    }
+/* Remove a margem extra que o componente Button pode ter */
+.germinar-right-column a {
+    text-decoration: none;
 }
 
 
+/* === RESPONSIVIDADE === */
+@media (max-width: 768px) {
+    .germinar-content {
+        flex-direction: column; /* Empilha as colunas em telas pequenas */
+    }
 
+    /* No mobile, alinha tudo ao centro */
+    .germinar-left-column, .germinar-right-column {
+        align-items: center;
+        text-align: center;
+    }
 
+    .germinar-logo {
+        width: 250px;
+    }
+}

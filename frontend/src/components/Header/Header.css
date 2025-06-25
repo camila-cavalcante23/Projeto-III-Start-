@@ -1,161 +1,88 @@
-
 .header {
-    margin: 80px auto;
-    background-size: contain;
     max-width: 1180px;
-    width: 100vw;
-    padding: 10px;
+    width: 100%; 
+    margin: 7rem auto; 
+    padding: 0 1rem; /* Espaçamento de segurança nas laterais */
 }
 
+/* O container do conteúdo, que cria as duas colunas */
 .header-content {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 9.5rem;
-    display: flex;             
+    gap: 3rem; /* Espaço entre a coluna da esquerda e a imagem */
 }
 
-.header-content .text-initial{
-    font-family: "Open Sans", serif;
-    font-size: 29px;
-    font-weight: bold;
+/* A coluna da esquerda que agrupa logo, texto e botão */
+.header-start {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Alinha tudo à esquerda */
+    gap: 1.5rem; /* Espaço entre os itens internos */
 }
 
-.header-content .header-logo{
-    width: 22vw;
+.header-logo {
+    width: 297px; 
     height: auto;
-    margin-bottom: 5%;
+}
+
+.text-initial p {
+    font-family: "Open Sans", serif;
+    font-size: 1.75rem; 
+    font-weight: bold;
+    line-height: 1.4; 
+    color: #333;
+    margin: 0;
 }
 
 .header-img {
-    width: 25vw;
+    width: 400px; /* Valor fixo para a imagem */
     height: auto;
+    flex-shrink: 0; /* Impede que a imagem encolha */
 }
 
-.header button{
-    font-size: 1.5vw;
-    padding: 1.2vw 1.4vw;
-    margin-top: 35px;
+.header-cta-button {
+  display: inline-block; /* Garante que o transform funcione corretamente no Link */
+  transition: transform 0.2s ease-in-out;
 }
 
-@media (max-width: 860px) {
+.header-cta-button:hover {
+  /* Aumenta o tamanho do botão em 5% ao passar o mouse */
+  transform: scale(1.05);
+}
+
+
+
+@media (max-width: 950px) {
+    /* Faz as colunas se empilharem */
     .header-content {
-        gap: 5rem;   
+        flex-direction: column;
+        text-align: center;
+    }
+
+    /* Centraliza o conteúdo da coluna da esquerda */
+    .header-start {
         align-items: center;
-        overflow-x: hidden;         
+        order: 2; /* O texto e o botão vêm depois da imagem */
     }
-    .header-content .color-1{
-        font-size: 80px;
-    }
-    .header-content .color-2{
-        font-size: 80px;
-    }
+
     .header-img {
-        width: 40vw;
-        height: auto;
-    }
-    .header-content .header-start.text-initial{
-        font-size:  30px;
-    }
-    .header .button-register{
-        font-size: 14px;
-        padding: 0.7rem 0.8rem;
+        order: 1; /* A imagem vem primeiro */
+        width: 350px; /* Diminui um pouco a imagem no mobile */
+        margin-bottom: 2rem;
     }
 }
 
-@media (max-width: 769px) {
-    .header-content {
-        gap: 3rem;  
-        align-items: center;         
+@media (max-width: 480px) {
+    .header-logo {
+        width: 220px;
     }
-    .header-content .color-1{
-        font-size: 48px;
-    }
-    .header-content .color-2{
-        font-size: 48px;
-    }
-    .header-img {
-        width: 40vw;
-        height: auto;
-    }
-    .header-content .header-start .text-initial{
-        font-size:  28px;
-    }
-    .header .button-register{
-        font-size: 12px;
-        padding: 0.7rem 0.8rem;
-    }
-}
 
-@media (max-width: 500px) {
-    .header-content {
-        gap: 2rem;   
-        align-items: center;         
+    .text-initial p {
+        font-size: 1.2rem;
     }
-    .header-content .color-1{
-        font-size: 46px;
-    }
-    .header-content .color-2{
-        font-size: 46px;
-    }
-    .header-img {
-        width: 40vw;
-        height: auto;
-    }
-    .header-content .header-start .text-initial{
-        font-size: 18px;
-    }
-    .header .button-register{
-        font-size: 10px;
-        padding: 0.7rem 0.8rem;
-    }
-}
 
-@media (max-width: 415px) {
-    .header{
-        margin: 20px 0px;
-    }
-    .header-content {
-        display: flex;
-        gap: 2rem;  
-        align-items: flex-start; 
-        flex-direction: column;        
-    }
-    .header-content .color-1{
-        font-size: 48px;
-    }
-    .header-content .color-2{
-        font-size: 48px;
-    }
-    .header-content .header-start .text-initial{
-        font-size: 15px;
-    }
-    .header-content .header-logo{
-        width: 10rem;
-        height: auto;
-    }
     .header-img {
-        width: 38vw;
-        height: auto;
-    }
-    .header .btn.green{
-        margin-top: 20px;
-        font-size: 10px;
-    }
-}
-
-@media (max-width: 376px) {
-    .header-content {
-        gap: 1rem;     
-    }
-    .header-content .color-1{
-        font-size: 50px;
-    }
-    .header-content .color-2{
-        font-size: 50px;
-    }
-    .header-content .header-start .text-initial{
-        font-size: 16px;
-    }
-    .header .button-register{
-        margin-top: 30px;
+        width: 80%; /* Ocupa 80% da largura da tela */
     }
 }

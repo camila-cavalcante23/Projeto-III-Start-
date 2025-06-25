@@ -1,102 +1,94 @@
 
-.description-content {
+
+.description-section {
+    position: relative;
+    margin-top: 4rem; /* Usa uma unidade mais consistente */
+}
+
+/* Div externa que ocupa a largura toda */
+.description-full-background {
     background: #002A3A;
     color: white;
+    padding: 7rem 0; /* Espaçamento vertical */
     width: 100%;
-    height: 35vw;
-    align-items: center; 
-    padding: 30px;
-    display: grid;
-    grid-template-columns: auto auto;
+}
+
+.description-inner-container {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 1rem; /* Espaçamento de segurança nas laterais */
+
+    display: flex; /* Cria as colunas lado a lado */
     justify-content: space-between;
-    gap: 7rem;
+    align-items: center;
+    gap: 3rem;
+    text-align: justify;
 }
 
-.description-content .description-1 {
-    float: left;
+
+.description-title {
+    flex-basis: 45%; 
+    flex-shrink: 0;
 }
 
-.description-1 p{
+.description-title h2 {
     font-family: "Gabarito", serif;
-    font-size: 3vw;
+    font-size: 3rem; /* Tamanho de fonte consistente */
+    line-height: 1.3;
+    margin: 0;
 }
 
-.description-2 p{
+/* Coluna da Direita: Texto */
+.description-text {
+    flex-basis: 50%; /* Ocupa 50% do espaço */
+}
+
+.description-text p {
     font-family: "Open Sans", serif;
-    font-size: 2vw;
+    font-size: 1.3rem; /* Tamanho de fonte consistente */
     font-weight: normal;
+    line-height: 1.7;
+    margin: 0;
 }
 
-.description {
-    position: relative;
-    margin-top: 6%;
-}
-  
-.description::before,
-.description::after {
+
+
+.description-section::before,
+.description-section::after {
     content: '';
     position: absolute;
     width: 0;
     height: 0;
+    z-index: 2; 
 }
-  
-.description::before {
+
+.description-section::before {
     bottom: 0;
     left: 0;
-    border-right: 50px solid transparent;  /* Cria a borda transparente à esquerda */
-    border-bottom: 50px solid #38D430;   /* Triângulo isósceles inferior esquerdo */
+    border-right: 50px solid transparent;
+    border-bottom: 50px solid #38D430;
 }
 
-.description::after {
+.description-section::after {
     top: 0;
     right: 0;
-    border-left: 50px solid transparent; /* Cria a borda transparente à direita */
-    border-top: 50px solid #38D430;      /* Triângulo isósceles superior direito */
+    border-left: 50px solid transparent;
+    border-top: 50px solid #38D430;
 }
+
 
 @media (max-width: 768px) {
-    .description-content{
-        height: 70vw; 
-        gap: 30px;      
-    }
-    .description-1 p{
-        font-size: 25px;
-    }
-    .description-2 p{
-        font-size: 1.1rem;
-    }
-}
-
-@media (max-width: 670px) {
-    .description-content {
-        display: flex;
+    .description-inner-container {
         flex-direction: column;
-        justify-content: space-evenly;
+        text-align: center;
+        gap: 2.5rem;
     }
-}
 
-@media (max-width: 580px) {
-    .description-content{
-        height: 90vw; 
-        gap: 20px;      
+    .description-title h2 {
+        font-size: 2.2rem;
     }
-    .description-1 p{
-        font-size: 19px;
-    }
-    .description-2 p{
-        font-size: 0.9rem;
-    }
-}
 
-@media (max-width: 415px) {
-    .description-content {
-        height: 30rem;
-        gap: 20px;
-    }
-    .description-1 p{
-        font-size: 18px;
-    }
-    .description-2 p{
-        font-size: 14px;
+    .description-text p {
+        font-size: 1rem;
     }
 }

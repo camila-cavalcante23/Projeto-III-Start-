@@ -1,48 +1,37 @@
-import React from 'react'
-import './Info.css'
-import { SlArrowRightCircle } from "react-icons/sl";
-import { Link } from "react-router-dom"
+import React from 'react';
+import './Info.css';
+import Logo from '../../assets/StartUFC-logo.png'; 
+import { IoAddCircleOutline } from "react-icons/io5";
+import { Link } from "react-router-dom";
+
+const InfoCard = ({ to, text, type, isLogo = false }) => (
+  <Link to={to} className={`info-box ${type} ${isLogo ? 'logo-box' : ''}`}>
+   
+    {isLogo ? (
+      <img src={Logo} alt="Start UFC Logo" />
+    ) : (
+      <>
+        <span className="box-text">{text}</span>
+        <IoAddCircleOutline className="box-icon" />
+      </>
+    )}
+  </Link>
+);
 
 const Info = () => {
   return (
-    <div class="grid-container">
-      <div className='grid'>
-        <div className='box box1'>
-          <Link to="/" className='grid-text'></Link>
-        </div>
-        <div className='box box2'>
-        <Link to="/germinar-page" className='grid-text'>Germinar</Link>
-          <SlArrowRightCircle />
-        </div>
-        <div className='box box3'>
-          <Link to="/galeria" className='grid-text'>Galeria</Link>
-            <SlArrowRightCircle />
-        </div>
-        <div className='box box4'>
-          <Link to="/" className='grid-text'>Cadastre sua Startup</Link>
-          <SlArrowRightCircle />
-        </div>
-       
-        <div className="box box5">
-          <Link to="/eventos" className="grid-text">Eventos</Link>
-         <SlArrowRightCircle />
-        </div>
-
-        <div className='box box6'>
-        <Link to="/apoiadores" className="grid-text">Apoiadores</Link>
-          <SlArrowRightCircle />
-        </div>
-        <div className='box box7'>
-          <Link to="/redesSociais" className='grid-text'>Redes Sociais</Link>
-          <SlArrowRightCircle />
-        </div>
-        <div className='box box8'>
-          <Link to="/" className='grid-text'>Acompanhe sua Startup</Link>
-          <SlArrowRightCircle />
-        </div>
+    <section className="info-section">
+      <div className="info-grid">
+        <InfoCard to="/" isLogo={true} />
+        <InfoCard to="/germinar" text="Germinar" type="green-box" />
+        <InfoCard to="/galeria" text="Galeria" type="dark-box" />
+        <InfoCard to="/apoiadores" text="Apoiadores" type="dark-box" />
+        <InfoCard to="/redesSociais" text="Redes Sociais" type="green-box" />
+        <InfoCard to="/noticias" text="Notícias" type="dark-box" />
+        <InfoCard to="/eventos" text="Eventos" type="green-box" />
       </div>
-    </div>
-  )
-}
+    </section>
+  );
+};
 
-export default Info
+export default Info;

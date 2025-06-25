@@ -1,36 +1,39 @@
-
-import './Germinar.css'
-import Img from '../../assets/foto1Start.png'
-import Button from '../../components/Button/Button'
-import React, { useState } from 'react';
+import React from 'react';
+import './Germinar.css';
+import Img from '../../assets/foto1Start.png';
+import Button from '../../components/Button/Button';
+import Logog from '../../assets/Germinar logo.png';
+import { Link } from 'react-router-dom'; // Importando o Link para o botão
 
 const Germinar = () => {
-
-  const [isDisabled, setIsDisabled] = useState(false);
-  const handleClick = () => {
-    alert('Botão clicado!');
-  };
-
-
+  // Limpamos o state e a função que não estavam sendo usados
   return (
-    <section className='germinar' id='germinar-id'>
-   
-      <h1 className='title-g'>Germinar</h1>
-        <div className='germinar-content'>
+    // Seção principal com o ID para a navegação por scroll
+    <section className="germinar-section" id="germinar-id">
 
-          <div className='text-germinar'>
-            <p>O projeto foi criado com objetivo de auxiliar Startups nas suas fases de criação e desenvolvimento. 
-              Apoios como este são de suma importância para a consolidação de novos negócios e para o 
-              desenvolvimento regional.
-            </p>
-            <img src={Img} alt="" className='img-g'/>
-          </div>
-          <div className='btn-right'>
-            <Button text="Ir para Germinar" onClick={handleClick} color="green" />
-          </div>
+      {/* Container principal que cria o layout de duas colunas */}
+      <div className="germinar-content">
+
+        {/* Coluna da Esquerda: Logo e Texto */}
+        <div className="germinar-left-column">
+          <img src={Logog} alt="Logo do projeto Germinar" className="germinar-logo" />
+          <p className="germinar-text">
+            O projeto foi criado com objetivo de auxiliar Startups nas suas fases de criação e desenvolvimento. Apoios como este são de suma importância para a consolidação de novos negócios e para o desenvolvimento regional.
+          </p>
         </div>
-    </section>
-  )
-}
 
-export default Germinar
+        {/* Coluna da Direita: Imagem e Botão */}
+        <div className="germinar-right-column">
+          <img src={Img} alt="Pessoas em uma reunião de trabalho" className="germinar-image" />
+          {/* O botão agora é um link navegável */}
+          <Link to="/germinar">
+            <Button text="Ir para Germinar" color="green" />
+          </Link>
+        </div>
+
+      </div>
+    </section>
+  );
+};
+
+export default Germinar;
