@@ -1,0 +1,107 @@
+.carrossel-container { 
+  position: relative;
+  width: 59%; /* Ajuste o tamanho do carrossel conforme necessário */
+  margin: auto;
+  left: -80px;
+  margin-bottom: 40px; /* Adiciona um espaço entre os carrosséis */
+}
+
+.carrossel-imagens {
+  display: flex;
+  transition: transform 0.8s ease-in-out; /* Transição suave para a mudança de imagens */
+  gap: 20px; /* Espaço entre as imagens, ajuste o valor conforme necessário */
+}
+
+.carrossel-imagem {
+  width: 33%; /* Cada imagem ocupará 1/3 da largura do carrossel (mostrando 3 imagens por vez) */
+  height: 200px; /* Ajuste a altura conforme necessário para garantir que todas as imagens tenham a mesma altura */
+  object-fit: cover; /* Garante que as imagens sejam cortadas para preencher o espaço sem distorção */
+}
+
+.prev {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background:rgb(255, 255, 255);
+  color: rgba(0, 42, 58, 1);
+  border-radius: 50%;
+  padding: 10px;
+  cursor: pointer;
+  font-size: 18px;
+  left:6px;
+}
+
+.next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background:rgb(255, 255, 255);
+  color: rgba(0, 42, 58, 1);
+  border-radius: 50%;
+  padding: 10px;
+  cursor: pointer;
+  font-size: 18px;
+  right: -202px;
+}
+
+@media (max-width: 1024px) {
+  .carrossel-container {
+    left: -60px;
+    width: 70%; /* Ajusta a largura do carrossel para 80% da tela em tablets */
+  /* Remove o deslocamento à esquerda */
+  }
+
+  .carrossel-imagem {
+    width: 50%; /* Exibe 2 imagens por vez em telas menores */
+  }
+
+  .prev, .next {
+    font-size: 16px; /* Ajusta o tamanho dos botões */
+    padding: 8px; /* Ajusta o padding dos botões */
+  }
+
+  .next {
+    right: -150px; /* Ajusta a posição do botão "próximo" */
+  }
+}
+
+/* Media query para telas menores que 768px (Celulares em modo paisagem e tablets pequenos) */
+@media (max-width: 768px) {
+  .carrossel-container {
+    width: 90%; /* Ajusta a largura do carrossel para 90% da tela em dispositivos menores */
+  }
+
+  .carrossel-imagem {
+    width: 50%; /* Exibe 2 imagens por vez em telas menores */
+  }
+
+  .prev, .next {
+    font-size: 14px; /* Ajusta o tamanho dos botões */
+    padding: 7px; /* Ajusta o padding dos botões */
+  }
+
+  .next {
+    right: -120px; /* Ajusta a posição do botão "próximo" */
+  }
+}
+
+/* Media query para telas menores que 480px (Celulares) */
+@media (max-width: 480px) {
+  .carrossel-container {
+    left: -45px;
+    width: 80%; /* O carrossel ocupa toda a largura da tela em dispositivos muito pequenos */
+  }
+
+  .carrossel-imagem {
+    width: 90%; /* Exibe uma imagem por vez em telas pequenas */
+  }
+
+  .prev, .next {
+    font-size: 10px; /* Ajusta o tamanho dos botões */
+    padding: 6px; /* Ajusta o padding dos botões */
+  }
+
+  .next {
+    right: -80px; /* Ajusta a posição do botão "próximo" */
+  }
+}

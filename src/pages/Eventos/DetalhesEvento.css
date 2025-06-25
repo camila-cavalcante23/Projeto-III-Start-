@@ -1,0 +1,53 @@
+/* Estilização Geral */
+.geralEvento {
+    max-width: 90%;
+    margin: auto;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.tituloEvento {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.titulo2 {
+    font-size: 20px;
+    font-weight: bold;
+    color: #222;
+}
+
+.conteudo1, .conteudo2 {
+    font-size: 16px;
+    color: #444;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.imagemEvento {
+    width: 100%;
+    max-width: 600px;
+    display: block;
+    margin: 20px auto;
+    border-radius: 8px;
+}
+
+.inscrevase {
+    display: block;
+    width: 150px;
+    padding: 10px;
+    text-align: center;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 20px auto;
+}
+
+.inscrevase:hover {
+    background-color: #45a049;
+}
