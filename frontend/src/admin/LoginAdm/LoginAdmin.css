@@ -1,5 +1,5 @@
 /* styles.css */
-.container-login {
+.container-login-admin {
   font-family: Arial, Helvetica, sans-serif;
   position: absolute;
   background-color: rgb(0, 42, 58, 1);
@@ -18,7 +18,7 @@
 }
 
 /* Login Info */
-.login-info {
+.login-info-admin {
   font-weight: 100;
   display: flex;
   flex-direction: column;
@@ -29,7 +29,7 @@
 }
 
 /* Sidebar */
-.side-bar-login {
+.side-bar-login-admin {
   background-color: rgb(255, 255, 255);
   border-radius: 30px 30px 30px 30px;
   width: 20rem;
@@ -42,7 +42,7 @@
   padding: 1rem;
 }
 
-.side-bar-login .button_btn_register {
+.side-bar-login-admin .button_btn_register-admin {
   background: rgb(35, 211, 25);
   width: 80%;
   color: rgb(29, 27, 86);
@@ -55,7 +55,7 @@
 }
 
 /* Botão Entrar */
-.login-info .button-enter {
+.login-info-admin .button-enter-admin {
   background: rgba(35, 211, 25);
   width: 100%;
   max-width: 9rem;
@@ -70,13 +70,13 @@
   display: grid;
 }
 
-.side-bar-login .img-logo {
+.side-bar-login-admin .img-logo-admin {
   width: 200px;
   margin: 0 auto;
 }
 
-.login-info .login-email-label, 
-.login-info .login-password-label {
+.login-info-admin .login-email-label-admin, 
+.login-info-admin .login-password-label-admin {
   font-size: 1rem;
   margin-top: 1rem;
   display: block;
@@ -84,15 +84,15 @@
   margin-bottom: 10px;
 }
 
-.login-title{
+.login-title-admin{
     font-size: 2rem;
     color: #FFFF;
     text-align: center;
     margin-bottom: 1rem;
 }
 
-.login-info .login-email-input, 
-.login-info .login-password-input {
+.login-info-admin .login-email-input-admin, 
+.login-info-admin .login-password-input-admin {
   height: 2.3rem;
   outline: none;
   border: none;
@@ -104,7 +104,7 @@
   margin-bottom: 1rem;
 }
 
-.login-info .reset-password {
+.login-info-admin .reset-password-admin {
   text-align: center;
   font-size: 0.9rem;
   margin-top: 1rem;
@@ -121,7 +121,7 @@
 }
 
 @media (max-width: 768px) {
-  .container-login {
+  .container-login-admin {
     flex-direction: column;
     width: 95%;
     height: auto;
@@ -134,7 +134,7 @@
     transform: translateX(-50%); /* Somente para centralizar horizontalmente */
   }
 
-  .side-bar-login {
+  .side-bar-login-admin {
     width: 100%;
     height: 40vh;
     min-height: 250px;
@@ -144,11 +144,11 @@
     justify-content: center;
   }
 
-  .side-bar-login .img-logo {
+  .side-bar-login-admin .img-logo-admin {
     width: 100px;
   }
 
-  .login-info {
+  .login-info-admin {
     width: 100%;
     max-width: 100%;
     padding: 20px;
@@ -158,18 +158,18 @@
     text-align: center;
   }
 
-  .login-info h1 {
+  .login-info-admin h1 {
     text-align: center;
     font-size: 26px;
   }
 
-  .login-info .button-enter {
+  .login-info-admin .button-enter-admin {
     align-self: center;
     width: 80%;
     max-width: 200px;
   }
 
-  .side-bar-login .button_btn_register {
+  .side-bar-login-admin .button_btn_register-admin {
     width: 80%;
     max-width: 200px;
   }
