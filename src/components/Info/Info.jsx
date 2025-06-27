@@ -23,7 +23,7 @@ const Info = () => {
     <section className="info-section">
       <div className="info-grid">
         <InfoCard to="/" isLogo={true} />
-        <InfoCard to="/germinar" text="Germinar" type="green-box" />
+        <InfoCard to="/germinar-page" text="Germinar" type="green-box" />
         <InfoCard to="/galeria" text="Galeria" type="dark-box" />
         <InfoCard to="/apoiadores" text="Apoiadores" type="dark-box" />
         <InfoCard to="/redesSociais" text="Redes Sociais" type="green-box" />

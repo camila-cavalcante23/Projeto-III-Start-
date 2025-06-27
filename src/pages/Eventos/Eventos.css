@@ -92,7 +92,29 @@
     background-color: #00972c;
 }
 
+.eventos-section {
+    margin-bottom: 4rem; /* Aumenta o espaço entre as seções */
+}
 
+
+.section-title {
+    font-family: "Gabarito", serif;
+    font-size: 2rem; /* Um pouco menor que o título principal */
+    color: #002A3A;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #00b33c; /* Linha verde para destacar */
+}
+
+/* Mensagem para quando não houver eventos */
+.eventos-placeholder {
+    color: #6c757d;
+    font-size: 1rem;
+    text-align: center;
+    padding: 2rem;
+    background-color: #e9ecef;
+    border-radius: 8px;
+}
 
 @media (max-width: 1024px) {
     .eventos-grid {
