@@ -1,121 +1,110 @@
-.GeralEventos {
-    padding: 40px;
-    text-align: center;
+
+
+.eventos-page {
+    background-color: #f8f9fa; 
 }
 
-.tituloEventos {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 2px;
-    margin-left: -40%;
+
+.eventos-container {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 3rem 1rem;
+    min-height: calc(100vh - 160px);
 }
 
-.eventosGrid {
-    display:grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 70px;
-    justify-content: center;
-    padding: 19px;
+/* Cabeçalho da página */
+.eventos-header {
+    margin-bottom: 2.5rem;
 }
 
-.eventoCard {
-    background: white;
+
+.eventos-header .main-title {
+    font-family: "Gabarito", serif;
+    font-size: 2.5rem;
+    color: #002A3A;
+    margin: 0;
+
+}
+
+/* Grid que segura os cards */
+.eventos-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 colunas em telas grandes */
+    gap: 2rem;
+}
+
+/* Estilo do card */
+.evento-card {
+    background:  #002A3A;;
     border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease-in-out;
-    cursor: pointer;
-    height: 105%;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    overflow: hidden; /* Garante que a imagem respeite a borda arredondada */
+
+    /* Usamos flexbox para organizar o conteúdo interno do card */
+    display: flex;
+    flex-direction: column;
 }
 
-.eventoCard:hover {
-    transform: scale(1.05);
+.evento-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
 }
 
-.eventoImagem {
+.evento-imagem {
     width: 100%;
     height: 200px;
     object-fit: cover;
 }
 
-.eventoInfo {
-    padding: 18px;
-    text-align: center;
-}
 
-.eventoTitulo {
-    font-size: 19px;
+.evento-info {
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between; /* Empurra o título para a esquerda e o botão para a direita */
+    align-items: center;           /* Alinha eles verticalmente no meio */
+    flex-grow: 1; 
+}
+.evento-titulo {
+    font-size: 1.25rem;
     font-weight: bold;
-    margin-bottom: 16px;
-    margin-top: -15px;
-
+    color: #f8f9fa;
+    margin: 0;
+    text-align: left;
 }
 
-.eventoBotao {
+.evento-botao {
     background-color: #00b33c;
     color: white;
     border: none;
-    padding: 8px 12px;
+    padding: 0.6rem 1.0rem;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 18px;
-
-
+    font-size: 12px;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.2s; 
+    white-space: nowrap; 
+    flex-shrink: 0;      
 }
-
-.eventoBotao:hover {
+.evento-botao:hover {
     background-color: #00972c;
 }
 
-/* Responsividade */
+
+
 @media (max-width: 1024px) {
-    .eventosGrid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 50px;
-    }
-
-    .tituloEventos {
-        font-size: 22px;
-        margin-left: -30%;
+    .eventos-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 colunas em tablets */
     }
 }
 
-@media (max-width: 768px) {
-    .eventosGrid {
-        grid-template-columns: repeat(1, 1fr);
-        gap: 30px;
+@media (max-width: 600px) {
+    .eventos-grid {
+        grid-template-columns: 1fr; /* 1 coluna em celulares */
     }
-
-    .tituloEventos {
-        font-size: 20px;
-        margin-left: 0;
-    }
-}
-
-@media (max-width: 480px) {
-    .GeralEventos {
-        padding: 20px;
-    }
-
-    .tituloEventos {
-        font-size: 18px;
-    }
-
-    .eventoCard {
-        height: auto;
-    }
-
-    .eventoImagem {
-        width: 100%;
-        height: 180px;
-    }
-
-    .eventoTitulo {
-        font-size: 16px;
-    }
-
-    .eventoBotao {
-        font-size: 16px;
-        padding: 6px 10px;
+    .eventos-header {
+        text-align: center; /* Centraliza o título no mobile */
     }
 }
