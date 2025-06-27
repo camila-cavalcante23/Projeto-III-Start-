@@ -1,29 +1,38 @@
-
-import './Germinar.css'
-import Img from '../../assets/foto1Start.png'
+import React from 'react';
+import './GerminarPage.css';
+import ImgLogo from '../../assets/GerminarLogop.png'; 
+import ImgIlustracao from '../../assets/folhaG.png'; 
+import Footer from "../../components/Footer/Footer";
 import Navbar2 from '../../components/Navbar2/Navbar2';
-import React, { useState } from 'react';
+import ConhecendoGerminar from '../../components/ConhecendoGerminar/ConhecendoGerminar';
+import NewsList from '../NewsList/NewsList'
 
 const GerminarPage = () => {
-
   return (
-    <section className='germinarPage' id='germinar-id'>
-       <Navbar2/>
-      <h1 className='title-g'>Germinar</h1>
+    <div>
+      <section className='germinarPage' id='germinar-id'>
+        <Navbar2 />
         <div className='germinar-content'>
-
-          <div className='text-germinar'>
-            <p>O projeto foi criado com objetivo de auxiliar Startups nas suas fases de criação e desenvolvimento. 
-              Apoios como este são de suma importância para a consolidação de novos negócios e para o 
-              desenvolvimento regional.
-            </p>
-            <img src={Img} alt="" className='img-g'/>
+          <div className='germinar-start'>
+            <img src={ImgLogo} alt="Logo do Projeto Germinar" className='germinar-logo' />
+            <div className='text-germinar'>
+              <p>Semeando inovação, colhendo desenvolvimento. Apoiamos sua Startup em cada fase.</p>
+              <p></p>
+            </div>
           </div>
-          <div className='btn-right'>
-          </div>
+          <img src={ImgIlustracao} alt="Ilustração do projeto Germinar" className='germinar-img' />
         </div>
-    </section>
-  )
+      </section>
+
+     
+      <div>
+        <ConhecendoGerminar />
+      </div>
+        <NewsList />
+       <Footer />
+
+    </div>
+  );
 }
 
-export default GerminarPage
+export default GerminarPage;

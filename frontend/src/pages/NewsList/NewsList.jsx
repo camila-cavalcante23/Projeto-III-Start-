@@ -1,43 +1,53 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-// import axios from 'axios'; // Não precisamos do axios por enquanto
+import axios from 'axios';
 import './NewsList.css';
 import Button from '../../components/Button/Button';
-
-// Dados fictícios para simular a resposta da API
-const mockNewsData = [
-  { id: 1, imagem: 'https://via.placeholder.com/400x200', titulo: 'Título da Notícia 1', conteudo: 'Este é um resumo do conteúdo da primeira notícia. Serve para testar o layout do card e ver como o texto se comporta no espaço disponível.', dataCriacao: new Date() },
-  { id: 2, imagem: 'https://via.placeholder.com/400x200', titulo: 'Título da Notícia 2', conteudo: 'Resumo da segunda notícia. A estrutura de cards permite exibir múltiplas entradas de forma organizada e visualmente agradável para o usuário.', dataCriacao: new Date() },
-  { id: 3, imagem: 'https://via.placeholder.com/400x200', titulo: 'Título da Notícia 3', conteudo: 'Terceiro e último resumo de notícia para esta seção. O layout é responsivo e se ajusta para telas menores, garantindo boa experiência.', dataCriacao: new Date() },
-];
 
 const NewsList = () => {
   const navigate = useNavigate();
   const [newsList, setNewsList] = useState([]);
-  // Começamos com loading como false, pois não vamos esperar nada
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    /* A CHAMADA REAL PARA A API ESTÁ COMENTADA.
-      Quando o backend estiver funcionando,  apagar
-      o código abaixo e descomentar este.
-    */
-    // axios.get('http://localhost:5000/api/news')
-    //   .then(response => {
-    //     setNewsList(response.data);
-    //     setLoading(false);
-    //   })
-    //   .catch(error => {
-    //     console.error('Erro ao carregar as notícias', error);
-    //     setLoading(false);
-    //   });
+    // 1. COLOQUE A URL REAL 
+    const apiUrl = 'URL';
 
-    // Usando os dados fictícios
-    setNewsList(mockNewsData);
-    setLoading(false); // Definimos loading como false imediatamente
+    axios.get(apiUrl)
+      .then(response => {
+        // 2. ESTE CONSOLE.LOG
+        // Ele vai te mostrar a estrutura exata do que o backend está enviando.
+        // Procure nele qual é o nome da propriedade que contém o array de notícias.
+        console.log('Resposta completa recebida da API:', response.data);
+
+        // =================================================================
+        // 3. PONTO PRINCIPAL DA ATUALIZAÇÃO!
+     
+        //    Estou usando 'results' como exemplo, mas pode ser 'data', 'noticias', 'items', etc.
+        //    Troque 'results' pelo nome correto que você viu no console.
+        const dadosRecebidos = response.data.results; 
+        // =================================================================
+
+        // 4. VERIFICAÇÃO DE SEGURANÇA
+        // Antes de atualizar o estado, garantimos que o que recebemos é realmente um array.
+        if (Array.isArray(dadosRecebidos)) {
+          setNewsList(dadosRecebidos);
+        } else {
+          console.error("Erro: Os dados recebidos não são um array!", dadosRecebidos);
+          //um array vazio para não quebrar a tela.
+          setNewsList([]);
+        }
+      })
+      .catch(error => {
+        console.error('Erro ao carregar as notícias:', error);
+        // Em caso de erro na chamada, também garantimos que newsList seja um array.
+        setNewsList([]);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
 
   }, []);
-
 
   return (
     <section className="news-section-container" id='news-id'>
