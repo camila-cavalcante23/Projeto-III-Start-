@@ -92,6 +92,16 @@ function Navbar() {
                           </Link>
 
                     <ul className={isOpen ? "nav-link active" : "nav-link"}>
+                       <li>
+                           <Link to="/criarEvento" onClick={() => { setMenuOpen(false); closeMenu(); }}>
+                               Cadastrar Evento
+                           </Link>
+                       </li>
+                        <li>
+                           <Link to="/ultimasNoticias" onClick={() => { setMenuOpen(false); closeMenu(); }}>
+                               Últimas Notícias
+                           </Link>
+                       </li>
                         <li>
                             <ScrollLink to="about-id" smooth={true} offset={-70} duration={500} onClick={closeMenu}>
                                 Quem Somos
@@ -135,6 +145,14 @@ function Navbar() {
                                 )}
                             </li>
                         )}
+                        
+                    {!user && (
+                        <li>
+                            <Link to="/LoginAdmin" onClick={closeMenu}>
+                                <Button text="Login Administrador" color="green" />
+                            </Link>
+                        </li>
+                    )}
                     </ul>
 
                     <button className="menu" onClick={toggleMenu}>
