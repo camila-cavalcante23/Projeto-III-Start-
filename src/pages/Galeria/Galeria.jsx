@@ -1,8 +1,10 @@
 import React from "react";
-import "./Galeria.css";  
+import "./Galeria.css"; 
 import Footer from "../../components/Footer/Footer";
 import Navbar2 from "../../components/Navbar2/Navbar2";
-import Carrossel from "../../components/carrossel/Carrossel";
+import Carrossel from "../../components/Carrossel/Carrossel"; 
+
+
 import img1 from "../../assets/Galeria1.jpg";
 import img2 from "../../assets/Galeria2.jpg";
 import img3 from "../../assets/Galeria3.jpg";
@@ -22,32 +24,48 @@ import img16 from "../../assets/Galeria16.webp";
 import img17 from "../../assets/Galeria17.jpg";
 import img18 from "../../assets/Galeria18.jpg";
 
-
 const Galeria = () => {
-    const imagens1 = [img1, img2, img3, img4, img5, img6];
-    const imagens2 = [img7, img8, img9, img10, img11, img12];
-    const imagens3 = [img13, img14, img15, img16, img17, img18];
+  
+    const galeriasDeEventos = [
+        {
+          titulo: "Título do Evento 1",
+          descricao: "Pequena descrição do primeiro evento realizado.",
+          imagens: [img1, img2, img3, img4, img5, img6]
+        },
+        {
+          titulo: "Título do Evento 2",
+          descricao: "Pequena descrição do segundo evento incrível.",
+          imagens: [img7, img8, img9, img10, img11, img12]
+        },
+        {
+          titulo: "Título do Evento 3",
+          descricao: "Pequena descrição do nosso último encontro.",
+          imagens: [img13, img14, img15, img16, img17, img18]
+        }
+    ];
 
     return (
-        <div>
+        <div className="pagina-galeria">
             <Navbar2 />
-            <div className="geralparceiros">
-                <h1 className="titulo-parceiros">Galeria</h1>
-                <div>
-                    <p className="titulo2"> </p><br />
-                    <p className="conteudo1"> </p>
+            <div className="galeria-container-principal">
+                <h1 className="galeria-titulo-pagina">Galeria</h1>
 
-                    {/* Primeiro carrossel */}
-                    <Carrossel imagens={imagens1} />
+                {/* Mapeia os dados para criar cada bloco de evento */}
+                {galeriasDeEventos.map((evento, index) => (
+                    <div key={index} className="galeria-evento">
+                        <h2 className="galeria-evento-titulo">{evento.titulo}</h2>
+                        <p className="galeria-evento-descricao">{evento.descricao}</p>
+                        
+                        {/* Renderiza o seu componente Carrossel para cada evento */}
+                        <Carrossel imagens={evento.imagens} />
+                    </div>
+                ))}
+            </div>
 
-                    {/* Segundo carrossel */}
-                    <Carrossel imagens={imagens2} />
+            <div className="algo">
 
-                    {/* Terceiro carrossel */}
-                    <Carrossel imagens={imagens3} />
-                </div>  
-            </div> 
-            <Footer />   
+            </div>
+            <Footer /> 
         </div>
     );
 };

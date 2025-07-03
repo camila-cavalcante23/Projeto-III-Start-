@@ -1,107 +1,75 @@
-.carrossel-container { 
+.carrossel-wrapper {
   position: relative;
-  width: 59%; /* Ajuste o tamanho do carrossel conforme necessário */
-  margin: auto;
-  left: -80px;
-  margin-bottom: 40px; /* Adiciona um espaço entre os carrosséis */
+  width: 100%;
 }
 
-.carrossel-imagens {
+
+.carrossel-track {
   display: flex;
-  transition: transform 0.8s ease-in-out; /* Transição suave para a mudança de imagens */
-  gap: 20px; /* Espaço entre as imagens, ajuste o valor conforme necessário */
+  overflow-x: scroll; 
+  scroll-behavior: smooth; 
+  gap: 15px;
+  padding: 10px 0; 
+
+
+  scrollbar-width: none; 
+  -ms-overflow-style: none; 
+}
+.carrossel-track::-webkit-scrollbar {
+  display: none;
+}
+
+
+.carrossel-imagem-container {
+  
+  flex: 0 0 calc(100% / 3); 
+  box-sizing: border-box;
+  padding: 0 5px;
 }
 
 .carrossel-imagem {
-  width: 33%; /* Cada imagem ocupará 1/3 da largura do carrossel (mostrando 3 imagens por vez) */
-  height: 200px; /* Ajuste a altura conforme necessário para garantir que todas as imagens tenham a mesma altura */
-  object-fit: cover; /* Garante que as imagens sejam cortadas para preencher o espaço sem distorção */
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 3px solid #fff;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-.prev {
+/* Estilo e posição dos botões */
+.carrossel-btn {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background:rgb(255, 255, 255);
-  color: rgba(0, 42, 58, 1);
+  z-index: 10;
+  background-color: rgba(255, 255, 255, 0.9);
+  border: none;
   border-radius: 50%;
-  padding: 10px;
+  width: 45px;
+  height: 45px;
   cursor: pointer;
-  font-size: 18px;
-  left:6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  font-size: 1.2rem;
+  color: #333;
 }
+.carrossel-btn:hover { background-color: white; }
+.prev { left: -22.5px; }
+.next { right: -22.5px; }
 
-.next {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background:rgb(255, 255, 255);
-  color: rgba(0, 42, 58, 1);
-  border-radius: 50%;
-  padding: 10px;
-  cursor: pointer;
-  font-size: 18px;
-  right: -202px;
-}
 
 @media (max-width: 1024px) {
-  .carrossel-container {
-    left: -60px;
-    width: 70%; /* Ajusta a largura do carrossel para 80% da tela em tablets */
-  /* Remove o deslocamento à esquerda */
-  }
-
-  .carrossel-imagem {
-    width: 50%; /* Exibe 2 imagens por vez em telas menores */
-  }
-
-  .prev, .next {
-    font-size: 16px; /* Ajusta o tamanho dos botões */
-    padding: 8px; /* Ajusta o padding dos botões */
-  }
-
-  .next {
-    right: -150px; /* Ajusta a posição do botão "próximo" */
+  .carrossel-imagem-container {
+    flex-basis: calc(100% / 2); 
   }
 }
 
-/* Media query para telas menores que 768px (Celulares em modo paisagem e tablets pequenos) */
 @media (max-width: 768px) {
-  .carrossel-container {
-    width: 90%; /* Ajusta a largura do carrossel para 90% da tela em dispositivos menores */
+  .carrossel-imagem-container {
+    flex-basis: 90%;
   }
-
-  .carrossel-imagem {
-    width: 50%; /* Exibe 2 imagens por vez em telas menores */
-  }
-
-  .prev, .next {
-    font-size: 14px; /* Ajusta o tamanho dos botões */
-    padding: 7px; /* Ajusta o padding dos botões */
-  }
-
-  .next {
-    right: -120px; /* Ajusta a posição do botão "próximo" */
-  }
-}
-
-/* Media query para telas menores que 480px (Celulares) */
-@media (max-width: 480px) {
-  .carrossel-container {
-    left: -45px;
-    width: 80%; /* O carrossel ocupa toda a largura da tela em dispositivos muito pequenos */
-  }
-
-  .carrossel-imagem {
-    width: 90%; /* Exibe uma imagem por vez em telas pequenas */
-  }
-
-  .prev, .next {
-    font-size: 10px; /* Ajusta o tamanho dos botões */
-    padding: 6px; /* Ajusta o padding dos botões */
-  }
-
-  .next {
-    right: -80px; /* Ajusta a posição do botão "próximo" */
-  }
+  .prev { left: 5px; } 
+  .next { right: 5px; }
 }

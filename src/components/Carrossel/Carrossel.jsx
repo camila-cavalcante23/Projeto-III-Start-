@@ -1,41 +1,45 @@
-import React, { useState } from "react";
+// Substitua o conteúdo de /components/Carrossel/Carrossel.jsx
+
+import React, { useRef } from 'react';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import "./Carrossel.css";
 
 const Carrossel = ({ imagens }) => {
-    const [currentIndex, setCurrentIndex] = useState(0);
+  const scrollRef = useRef(null);
 
-    const nextImage = () => {
-        setCurrentIndex((prevIndex) => {
-            // Incrementa o índice de 3 em 3 e faz o loop
-            return (prevIndex + 3) % imagens.length;
-        });
-    };
+  const scroll = (direction) => {
+    // Calcula o quanto rolar: a largura do container - um pouco de margem
+    const scrollAmount = scrollRef.current.clientWidth * 0.8; 
+    if (direction === 'left') {
+      scrollRef.current.scrollLeft -= scrollAmount;
+    } else {
+      scrollRef.current.scrollLeft += scrollAmount;
+    }
+  };
 
-    const prevImage = () => {
-        setCurrentIndex(
-            (prevIndex) => (prevIndex - 3 + imagens.length) % imagens.length
-        );
-    };
+  return (
+    <div className="carrossel-wrapper">
+      <button className="carrossel-btn prev" onClick={() => scroll('left')}>
+        <FaChevronLeft />
+      </button>
 
-    // Pega as 3 imagens atuais com base no índice
-    const currentImages = imagens.slice(currentIndex, currentIndex + 3);
+      <div className="carrossel-track" ref={scrollRef}>
+        {imagens.map((img, index) => (
+          <div key={index} className="carrossel-imagem-container">
+            <img
+              src={img}
+              alt={`Imagem da galeria ${index + 1}`}
+              className="carrossel-imagem"
+            />
+          </div>
+        ))}
+      </div>
 
-    return (
-        <div className="carrossel-container">
-            <button className="prev" onClick={prevImage}>←</button>
-            <div className="carrossel-imagens">
-                {currentImages.map((img, index) => (
-                    <img
-                        key={index}
-                        src={img}
-                        alt={`Imagem ${currentIndex + index + 1}`}
-                        className="carrossel-imagem"
-                    />
-                ))}
-            </div>
-            <button className="next" onClick={nextImage}>→</button>
-        </div>
-    );
+      <button className="carrossel-btn next" onClick={() => scroll('right')}>
+        <FaChevronRight />
+      </button>
+    </div>
+  );
 };
 
 export default Carrossel;
