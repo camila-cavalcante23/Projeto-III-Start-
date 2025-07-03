@@ -11,6 +11,7 @@ import RedesSociais from './pages/RedesSociais/RedesSociais.jsx'
 import Galeria from './pages/Galeria/Galeria.jsx'
 import NewsForm from './admin/NewsForm/NewsForm.jsx'
 import Login from './pages/Login/Login.jsx'
+import LoginAdmin from './admin/LoginAdm/LoginAdmin.jsx';
 import Eventos from './pages/Eventos/Eventos.jsx'
 import DetalhesEvento from "./pages/Eventos/DetalhesEvento.jsx";
 import Inscricao from './admin/inscricaoEvento/inscricao.jsx';
@@ -20,6 +21,9 @@ import Register from './pages/Register/Register.jsx'
 import Perfil from './pages/Perfil/Perfil.jsx'
 import EditarPerfil from './pages/Perfil/EditarPerfil.jsx'
 import NewList from './pages/NewsList/NewsList.jsx';
+import CriarNoticias from './admin/Noticiais/CriarNoticias.jsx';
+import CriarEvento from './admin/Evento/CriarEvento.jsx'
+import UltimasNoticias from './admin/NoticiasAdm/UltimasNoticias.jsx';
 
 const router = createBrowserRouter([
   {
@@ -75,6 +79,10 @@ const router = createBrowserRouter([
         element: <Login/>
       },
       {
+        path: "loginAdmin",
+        element: <LoginAdmin/>
+      },
+      {
         path: "eventos",
         element: <Eventos/>
       },
@@ -102,6 +110,18 @@ const router = createBrowserRouter([
       {
         path: "New-list",
         element: <NewList/>,
+      },
+      {
+        path: "criarNoticias",
+        element: <CriarNoticias/>,
+      },
+      {
+        path: "criarEvento",
+        element: <CriarEvento/>,
+      },
+      {
+        path: "ultimasNoticias",
+        element: <UltimasNoticias/>,
       },
     ]
   },
