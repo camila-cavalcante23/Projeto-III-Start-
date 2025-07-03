@@ -1,52 +1,59 @@
-.carrossel-container {
-    width: 60%;
-    margin: 0 auto;
+
+.pagina-galeria {
+  background-color: #f8f9fa;
+}
+.algo{
+  margin-top: 100px;
+}
+
+.galeria-container-principal {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4rem; 
+
+}
+
+.galeria-titulo-pagina {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #1a2e35;
+}
+
+.galeria-evento-titulo {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.galeria-evento-descricao {
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+
+
+@media (max-width: 768px) {
+  .galeria-container-principal {
+    padding: 2rem 1rem; /* Diminui o espaçamento da página */
+    gap: 3rem;
+  }
+
+  .galeria-titulo-pagina {
+    font-size: 2.2rem; /* Diminui o título principal */
     text-align: center;
   }
-  
-  .carrossel-container img {
-    width: 40%;
-    height: auto;
-    border-radius: 10px;
-  }
-  
-  .carrossel-container button {
-    margin-top: 10px;
-    padding: 10px;
-    color: rgba(0, 42, 58, 1);
-    border: none;
-    border-radius: 50px;
-    cursor: pointer;
-  }
-  
-  .carrossel-container button:hover {
-    background-color: #0056b3;
+
+  .galeria-evento-titulo {
+    font-size: 1.5rem; /* Diminui o título de cada evento */
   }
 
-
-  @media (max-width: 1024px) {
-    .titulo-parceiros{
-      font-size: 17px;
-     
-    }
-  
+  .galeria-evento-descricao {
+    font-size: 1rem; /* Diminui a descrição */
+    margin-bottom: 1.5rem;
   }
-  
-  /* Media query para telas menores que 768px (Celulares em modo paisagem e tablets pequenos) */
-  @media (max-width: 768px) {
-    .titulo-parceiros {
-      font-size: 17px;
-
-    }
-  
-   
-  }
-  
-  /* Media query para telas menores que 480px (Celulares) */
-  @media (max-width: 480px) {
-    .titulo-parceiros{
-      font-size: 17px;
-      
-    }
-  }
-  
+}

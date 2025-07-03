@@ -42,8 +42,10 @@
 }
 
 .header-cta-button {
-  display: inline-block; /* Garante que o transform funcione corretamente no Link */
+  display: inline-block;
   transition: transform 0.2s ease-in-out;
+  text-decoration: none; 
+  color: inherit;       
 }
 
 .header-cta-button:hover {
