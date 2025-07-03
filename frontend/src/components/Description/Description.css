@@ -3,6 +3,7 @@
 .description-section {
     position: relative;
     margin-top: 4rem; /* Usa uma unidade mais consistente */
+    background-color: #f8f9fa;
 }
 
 /* Div externa que ocupa a largura toda */

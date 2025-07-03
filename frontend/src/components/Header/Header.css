@@ -3,6 +3,7 @@
     width: 100%; 
     margin: 7rem auto; 
     padding: 0 1rem; /* Espaçamento de segurança nas laterais */
+    background-color: #f8f9fa;
 }
 
 /* O container do conteúdo, que cria as duas colunas */
@@ -11,6 +12,7 @@
     justify-content: space-between;
     align-items: center;
     gap: 3rem; /* Espaço entre a coluna da esquerda e a imagem */
+    background-color: #f8f9fa;
 }
 
 /* A coluna da esquerda que agrupa logo, texto e botão */
