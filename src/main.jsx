@@ -88,8 +88,8 @@ const router = createBrowserRouter([
       },
 
       {
-        path: "detalhesevento", 
-        element: <DetalhesEvento/>
+     path: "detalhesevento/:id", 
+     element: <DetalhesEvento/>
       },
       {
         path: "inscricaoevento",
