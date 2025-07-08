@@ -11,19 +11,28 @@ import RedesSociais from './pages/RedesSociais/RedesSociais.jsx'
 import Galeria from './pages/Galeria/Galeria.jsx'
 import NewsForm from './admin/NewsForm/NewsForm.jsx'
 import Login from './pages/Login/Login.jsx'
-import LoginAdmin from './admin/LoginAdm/LoginAdmin.jsx';
+import LoginAdmin from './admin/LoginAdm/LoginAdmin.jsx'
 import Eventos from './pages/Eventos/Eventos.jsx'
-import DetalhesEvento from "./pages/Eventos/DetalhesEvento.jsx";
-import Inscricao from './admin/inscricaoEvento/inscricao.jsx';
-import GaleriaForm from './admin/GaleriaForm/GaleriaForm.jsx';
+import DetalhesEvento from "./pages/Eventos/DetalhesEvento.jsx"
+import Inscricao from './admin/inscricaoEvento/inscricao.jsx'
+import GaleriaForm from './admin/GaleriaForm/GaleriaForm.jsx'
 import NewsDetail from './pages/NewsDetail/NewsDetail.jsx'
 import Register from './pages/Register/Register.jsx'
 import Perfil from './pages/Perfil/Perfil.jsx'
 import EditarPerfil from './pages/Perfil/EditarPerfil.jsx'
-import NewList from './pages/NewsList/NewsList.jsx';
-import CriarNoticias from './admin/Noticiais/CriarNoticias.jsx';
+import NewList from './pages/NewsList/NewsList.jsx'
+import CriarNoticias from './admin/Noticiais/CriarNoticias.jsx'
 import CriarEvento from './admin/Evento/CriarEvento.jsx'
-import UltimasNoticias from './admin/NoticiasAdm/UltimasNoticias.jsx';
+import UltimasNoticias from './admin/NoticiasAdm/UltimasNoticias.jsx'
+import EventosExclusivos from './admin/EventosExclusivos/EventosExclusivos.jsx'
+import AdminDashboard from './admin/Dashboard/AdminDashboard.jsx'
+import NoticiasDetalhada from './pages/NoticiasDetalhadas/NoticiasDetalhadas.jsx'
+import AdicionarImagem from './admin/AdicionarImagem/AdicionarImagem.jsx'
+import CadastrarMembro from './admin/CadastrarMembro/NovoMembro.jsx'
+import EditarEventos from './admin/EditarEvento/EditarEventos.jsx'
+import EditaNoticias from './admin/EditarNoticias/EditaNoticias.jsx'
+import EditarImagem from './admin/EditaImagem/EditarImagem.jsx'
+import GerenciarAdmins from './admin/GerenciaAdmin/GerenciaAdmins.jsx'
 
 const router = createBrowserRouter([
   {
@@ -46,7 +55,6 @@ const router = createBrowserRouter([
         path: "germinar-page",
         element: <GerminarPage />
       },
-
       {
         path: "perfil",
         element: <Perfil/>,
@@ -56,8 +64,6 @@ const router = createBrowserRouter([
         path: "editar-perfil",
         element: <EditarPerfil/>,
       },
-
-      
       {
         path: "apoiadores",
         element: <Apoiadores/>,
@@ -88,8 +94,8 @@ const router = createBrowserRouter([
       },
 
       {
-     path: "detalhesevento/:id", 
-     element: <DetalhesEvento/>
+        path: "detalhesevento", 
+        element: <DetalhesEvento/>
       },
       {
         path: "inscricaoevento",
@@ -98,6 +104,10 @@ const router = createBrowserRouter([
       {
         path: "noticia/:id",
         element: <NewsDetail/>
+      },
+      {
+        path: "noticiasDetalhadas/:id",
+        element: <NoticiasDetalhada/>
       },
       { 
         path: "register",
@@ -122,6 +132,38 @@ const router = createBrowserRouter([
       {
         path: "ultimasNoticias",
         element: <UltimasNoticias/>,
+      },
+      {
+        path: "eventosExclusivos",
+        element: <EventosExclusivos/>,
+      },
+      {
+        path: "/adminDashboard",
+        element: <AdminDashboard/>,
+      },
+      {
+        path: "adicionarImagem",
+        element: <AdicionarImagem/>,
+      },
+      {
+        path: "cadastrarMembro",
+        element: <CadastrarMembro/>,
+      },
+      {
+        path: "editarEventos",
+        element: <EditarEventos/>,
+      },
+      {
+        path: "editaNoticias",
+        element: <EditaNoticias/>,
+      },
+      {
+        path: "editarImagem",
+        element: <EditarImagem/>,
+      },
+      {
+        path: "gerenciarAdmins",
+        element: <GerenciarAdmins/>,
       },
     ]
   },
