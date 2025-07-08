@@ -1,5 +1,5 @@
 nav {
-  background-color: #f8f9fa;
+    background: #efefef;
     padding: 0.3rem 0;
     position: sticky;
     top: 0;
@@ -8,7 +8,6 @@ nav {
 }
 
 .navbar {
-    
     max-width: 1180px;
     width: 100%;
     margin: 0 auto;
@@ -159,6 +158,49 @@ body.menu-aberto {
     overflow: hidden;
 }
 
+.notificacoes {
+    position: relative;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.notificacao-icon {
+    position: relative;
+}
+
+.badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: red;
+    color: #fff;
+    border-radius: 50%;
+    font-size: 10px;
+    padding: 2px 5px;
+}
+
+.dropdown-notificacoes {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background: #fff;
+    color: #000;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 200px;
+    box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+    z-index: 100;
+}
+
+.notificacao-item {
+    padding: 8px 10px;
+    font-size: 14px;
+    border-bottom: 1px solid #eee;
+}
+
+.notificacao-item:last-child {
+    border-bottom: none;
+}
 
 
 @media (max-width: 830px) {
