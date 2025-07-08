@@ -1,56 +1,20 @@
-
 .perfil-container {
-    width: 510px;
-    height: 550px;
+    max-width: 500px;
     background-color: #002A3A;
-    box-shadow: 12px 17px 19.2px rgba(0, 0, 0, 0.25);
-    border-radius: 91px;
-    position: relative;
-    margin: 125px auto 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 30px;
+    margin: 120px auto;
     padding: 20px;
-}
-  
-  .perfil-container h2 {
     text-align: center;
-    font-size: 24px;
+    color: white;
+}
+
+.perfil-container h2 {
+    font-size: 22px;
     margin-bottom: 20px;
-  }
+}
 
-  strong{
-    color: rgb(255, 255, 255);
-    margin-left: 70px;
-    top: 10px;
-  }
-
-  .traco1{
-    position: absolute;
-      border: 1px solid rgba(56, 212, 48, 1.00); 
-      width: 450px; 
-      padding: 0px 0px 0px ; 
-      left: 40px;
-      top: 150px;
-      transform: rotate(4.969616689786745e-17deg)"
-  }
-
-  .traco2{
-    position: absolute;
-    border: 1px solid rgba(56, 212, 48, 1.00); 
-    width: 450px; 
-    padding: 0px 0px 0px ; 
-    left: 40px;
-    top: 330px;
-    transform: rotate(4.969616689786745e-17deg)"
-   }
-
-   .config{
-    position: absolute;
-    color: rgb(255, 255, 255);
-    top: 347px;
-    margin-left: 168px;
-    align-items: center;
-   }
-  
-  .perfil-container img {
+.perfil-container img.foto-perfil {
     display: block;
     width: 90px;
     height: 90px;
@@ -58,259 +22,181 @@
     border-radius: 50%;
     margin: 0 auto;
     margin-top: 32px;
-  }
-  
-  .perfil-container p {
-  position: relative;
-    font-size: 16px;
-    margin: 10px 0;
-    top: 10px;
-  }
-  
-  .perfil-container strong {
-    font-weight: bold;
-  }
-  
-  .perfil-container p {
-    font-size: 18px;
-    line-height: 1.6;
-    color: rgb(255, 255, 255);  
-  }
+}
 
-  button.edit1, button.exclu, button.sair {
-    position: relative;
+.perfil-container p {
     font-size: 16px;
-    color: rgba(56, 212, 48, 1);
-    border: none;
-    background: none;
+    margin: 8px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.perfil-container p strong {
+    width: 90px;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+
+.perfil-container p strong {
     display: inline-block;
-    top: 60px;
+    width: 70px;
+    text-align: right;
+    margin-right: 10px;
+}
+
+.traco1,
+.traco2 {
+    border: 1px solid #38d430;
+    margin: 20px auto;
+    width: 80%;
+}
+
+.config {
+    font-size: 18px;
+    margin: 15px 0;
+}
+
+.botoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
 }
 
 button.edit1 {
-     top: 70px;
-    left: 50px;
+    font-size: 14px;
+    color: #ffffff;
+    background: #868201;
+    border: 1px solid #4f4f03;
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background 0.3s, color 0.3s;
 }
 
+button.sair,
 button.exclu {
-  top: 70px;
-    left: 240px;
+    font-size: 14px;
+    color: #ffffff;
+    background: #6e0606;
+    border: 1px solid #290101;
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background 0.3s, color 0.3s;
 }
 
-button.sair{
-   left: 147px;
-   top: 95PX;
+button.edit1:hover{
+    background: #5c5602;
+    color: #ffffff;
 }
 
-  .perfil-container p strong {
-    margin-right: 10px; /* Ajuste o valor conforme necessário */
-    display: inline-block; /* Garante que o espaçamento seja aplicado corretamente */
-    width: 100px; /* Mantém todos os rótulos alinhados */
-  }
-  
- .Nav {
-  position: fixed;
-  width: 100%;
-  height: 50px;
-  background-color: #002A3A;
-  top: 0;
- }
- .Nav1{
-  position: fixed;
-  width: 100%;
-  top: 50px;
-  height: 25px;
-  background-color: rgba(56, 212, 48, 1);
- }
- 
- .seta{
-  position: absolute;
-  top: 10px;
-  padding: 0 1rem;
- }
- .logo{
-  position: absolute;
-  width: 900%;
-  left: 45%;
-  top: 5px;
- }
- .titulo{
-  position: absolute;
+button.sair:hover,
+button.exclu:hover{
+  background: #4e0000;
+  color: #FFF;
+}
+
+.eventos-lista {
+  list-style: none;
+  padding: 0;
+  margin: 15px 0;
+}
+
+.eventos-lista li {
+  background: rgba(255, 255, 255, 0.1);
+  margin: 5px 0;
+  padding: 8px;
+  border-radius: 4px;
+  color: #fff;
+}
+
+
+.Nav {
+    position: fixed;
+    width: 100%;
+    height: 50px;
+    background-color: #002A3A;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1rem;
+}
+
+.Nav1 {
+    position: fixed;
+    width: 100%;
+    height: 5px;
+    background-color: #38d430;
+    top: 50px;
+    left: 0;
+    z-index: 9;
+}
+
+.seta {
+    height: 25px;
+    cursor: pointer;
+}
+
+.logo {
+    position: absolute;
+    width: 8%;
+    left: 55%;
+    top: 5px;
+}
+
+.titulo {
+    position: absolute;
     display: flex;
     top: 50px;
     font-size: 20px;
-    left: 41%;
- }
-
- /* Para telas menores que 1024px */
- @media (max-width: 1024px) {
-  .perfil-container {
-      width: 93%; /* Ajustando a largura para 93%, como em 480px */
-      height: auto;
-      padding: 1px; /* Ajustando o padding */
-      top: 10px; /* Ajustando o posicionamento */
-  }
-
-  .traco1, .traco2 {
-      width: 75%; /* Ajustando a largura das linhas */
-      left: 12.5%; /* Centralizando */
-  }
-
-  .titulo {
-      font-size: 16px; /* Reduzindo o tamanho da fonte */
-      left: 30%; /* Centralizando o título */
-  }
-
-  .logo {
-      width: 20%; /* Ajustando o tamanho da logo */
-      left: 44%;
-      top: 10px;
-  }
-
-  button.edit1, button.exclu {
-      font-size: 14px; /* Ajustando o tamanho da fonte dos botões */
-      text-align: center;
-      display: block; /* Colocando os botões em linha */
-      margin: 10px auto;
-  }
-
-  button.edit1 {
-      left: -80px;
-  }
-
-  button.exclu {
-      top: 15px;
-      left: 90px;
-  }
-
-  .config {
-      color: rgb(255, 255, 255);
-      top: 337px;
-      margin-left: 110px;
-      font-size: 16px;
-  }
-
-  .perfil-container h2 {
-      font-size: 19px; /* Ajustando o tamanho do título */
-  }
-
-  .perfil-container p {
-      top: 30px;
-      padding: 1px;
-      left: -20px;
-  }
+    left: 55%;
 }
 
-/* Para telas menores que 768px */
 @media (max-width: 768px) {
-  .perfil-container {
-      width: 93%; /* Ajustando a largura para 93%, como em 480px */
-      height: auto;
-      padding: 1px; /* Ajustando o padding */
-      top: 10px;
-  }
-
-  .traco1, .traco2 {
-      width: 75%; /* Ajustando a largura das linhas */
-      left: 12.5%; /* Centralizando */
-  }
-
-  .titulo {
-      font-size: 16px; /* Reduzindo o tamanho da fonte */
-      left: 30%; /* Centralizando o título */
-  }
-
-  .logo {
-      width: 20%; /* Ajustando o tamanho da logo */
-      left: 44%;
-      top: 10px;
-  }
-
-  button.edit1, button.exclu {
-      font-size: 14px; /* Ajustando o tamanho da fonte dos botões */
-      text-align: center;
-      display: block; /* Colocando os botões em linha */
-      margin: 10px auto;
-  }
-
-  button.edit1 {
-      left: -80px;
-  }
-
-  button.exclu {
-      top: 15px;
-      left: 90px;
-  }
-
-  .config {
-      color: rgb(255, 255, 255);
-      top: 337px;
-      margin-left: 110px;
-      font-size: 16px;
-  }
-
-  .perfil-container h2 {
-      font-size: 19px; /* Ajustando o tamanho do título */
-  }
-
-  .perfil-container p {
-      top: 30px;
-      padding: 1px;
-      left: -20px;
-  }
-}
-
-/* Para telas menores que 480px */
-@media (max-width: 480px) {
-  .perfil-container {
-      width: 95%;
-      border-radius: 20px;
-      padding: 1px;
-      height: 460px;
-      top: 10px;
-    
-  }
-
-  .perfil-container p {
-      top: 30px;
-   font-size: 15px;
-      left: -20px;
-      
+    .perfil-container {
+        width: 90%;
+        margin-top: 100px;
+        padding: 15px;
     }
 
-    .config{
-      color: rgb(255, 255, 255);
-      top: 337px;
-      margin-left: 110px;
-      font-size: 16px;
-     }
+    .perfil-container img.foto-perfil {
+        width: 80px;
+        height: 80px;
+    }
 
-  .perfil-container h2 {
-      font-size: 19px;
-  }
+    .config {
+        font-size: 16px;
+    }
 
-  .traco1, .traco2 {
-      width: 75%;
-      left: 12.5%;
-  }
+    .Nav .titulo {
+        font-size: 16px;
+    }
+}
 
-  .titulo {
-      font-size: 16px;
-      left: 76%;
-  }
+@media (max-width: 480px) {
+    .perfil-container {
+        width: 95%;
+        margin-top: 90px;
+        border-radius: 20px;
+        padding: 10px;
+    }
 
+    .perfil-container p strong {
+        width: auto;
+        display: block;
+        text-align: center;
+    }
 
-  button.edit1, button.exclu {
-      font-size: 14px;
-      text-align: center;
-  }
-  button.edit1{
-    left: -80px;
-    top: 109px;
-  }
-
-  button.exclu{
-    top: 80px;
-    left: 90px;
-  }
+    .botoes {
+        flex-direction: column;
+        gap: 8px;
+    }
 }
