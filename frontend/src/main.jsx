@@ -33,6 +33,7 @@ import EditarEventos from './admin/EditarEvento/EditarEventos.jsx'
 import EditaNoticias from './admin/EditarNoticias/EditaNoticias.jsx'
 import EditarImagem from './admin/EditaImagem/EditarImagem.jsx'
 import GerenciarAdmins from './admin/GerenciaAdmin/GerenciaAdmins.jsx'
+import ListaFrequencia from './admin/ListaFrequencia/ListaDeFrequencia.jsx'
 
 const router = createBrowserRouter([
   {
@@ -164,6 +165,10 @@ const router = createBrowserRouter([
       {
         path: "gerenciarAdmins",
         element: <GerenciarAdmins/>,
+      },
+      {
+        path: "listaFrequencia",
+        element: <ListaFrequencia/>
       },
     ]
   },
