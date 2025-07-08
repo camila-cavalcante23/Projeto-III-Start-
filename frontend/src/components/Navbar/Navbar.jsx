@@ -90,18 +90,7 @@ function Navbar() {
                   <Link to="/" onClick={handleLogoClick}>
                     <img src={Logo} alt="StartUFC Logo" className='navbar-logo' />
                           </Link>
-
                     <ul className={isOpen ? "nav-link active" : "nav-link"}>
-                       <li>
-                           <Link to="/criarEvento" onClick={() => { setMenuOpen(false); closeMenu(); }}>
-                               Cadastrar Evento
-                           </Link>
-                       </li>
-                        <li>
-                           <Link to="/ultimasNoticias" onClick={() => { setMenuOpen(false); closeMenu(); }}>
-                               Últimas Notícias
-                           </Link>
-                       </li>
                         <li>
                             <ScrollLink to="about-id" smooth={true} offset={-70} duration={500} onClick={closeMenu}>
                                 Quem Somos
