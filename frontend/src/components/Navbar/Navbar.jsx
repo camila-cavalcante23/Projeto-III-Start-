@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Navbar.css';
-import { FaBars, FaTimes, FaUser, FaSignOutAlt, FaChevronDown } from "react-icons/fa";
+import { FaBars, FaTimes, FaUser, FaSignOutAlt, FaChevronDown, FaBell } from "react-icons/fa";
 import Logo from '../../assets/StartUFC-azul.png';
 import { Link, useNavigate } from "react-router-dom";
 import Button from '../../components/Button/Button';
@@ -11,30 +11,39 @@ function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const [user, setUser] = useState(null);
     const [menuOpen, setMenuOpen] = useState(false);
+    const [notificacoesOpen, setNotificacoesOpen] = useState(false);
+    const [notificacoes, setNotificacoes] = useState([]);
     const userMenuRef = useRef(null);
+    const notificacoesRef = useRef(null);
     const navigate = useNavigate();
 
-    // Efeito para buscar os dados do usuário ao carregar o componente
     useEffect(() => {
         const userId = localStorage.getItem('userId');
         if (userId) {
             axios.get(`https://localhost:44367/users/${userId}`)
                 .then(response => {
                     setUser(response.data);
+
+                    // Simulando notificações para o usuário logado
+                    setNotificacoes([
+                        { id: 1, mensagem: "Você está inscrito no evento: Workshop React" },
+                        { id: 2, mensagem: "Novo evento publicado: Hackathon 2025" }
+                    ]);
                 })
                 .catch(error => {
                     console.error('Erro ao pegar dados do usuário', error);
-                    // Se o usuário não for encontrado ou houver erro, limpa o storage
                     localStorage.removeItem('userId');
                 });
         }
     }, []);
 
-    // Efeito para fechar o dropdown do usuário ao clicar fora dele
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
                 setMenuOpen(false);
+            }
+            if (notificacoesRef.current && !notificacoesRef.current.contains(event.target)) {
+                setNotificacoesOpen(false);
             }
         };
         document.addEventListener('mousedown', handleClickOutside);
@@ -43,8 +52,6 @@ function Navbar() {
         };
     }, []);
 
-
-    // Controla a abertura/fechamento do menu mobile e trava o scroll da página
     const toggleMenu = () => {
         const newIsOpen = !isOpen;
         setIsOpen(newIsOpen);
@@ -55,7 +62,6 @@ function Navbar() {
         }
     };
 
-    // Fecha o menu mobile (usado ao clicar nos links)
     const closeMenu = () => {
         if (isOpen) {
             setIsOpen(false);
@@ -63,33 +69,26 @@ function Navbar() {
         }
     };
 
-    // Função de logout
     const handleLogout = () => {
         localStorage.removeItem('userId');
         setUser(null);
         setMenuOpen(false);
-        closeMenu(); // Garante que o menu mobile feche ao deslogar
-        navigate('/'); // Redireciona para a home
+        closeMenu();
+        navigate('/');
     };
 
     const handleLogoClick = () => {
-  // Comanda a janela a rolar para o topo com uma animação suave
-  window.scrollTo({
-    top: 0,
-    behavior: 'smooth'
-  });
-
-  // Também garante que o menu mobile seja fechado, caso esteja aberto
-  closeMenu();
-};
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        closeMenu();
+    };
 
     return (
         <>
             <nav>
                 <div className='navbar'>
-                  <Link to="/" onClick={handleLogoClick}>
-                    <img src={Logo} alt="StartUFC Logo" className='navbar-logo' />
-                          </Link>
+                    <Link to="/" onClick={handleLogoClick}>
+                        <img src={Logo} alt="StartUFC Logo" className='navbar-logo' />
+                    </Link>
                     <ul className={isOpen ? "nav-link active" : "nav-link"}>
                         <li>
                             <ScrollLink to="about-id" smooth={true} offset={-70} duration={500} onClick={closeMenu}>
@@ -114,34 +113,50 @@ function Navbar() {
                                 </Link>
                             </li>
                         ) : (
-                            <li className="user-menu" ref={userMenuRef}>
-                                <div className="user-info" onClick={() => setMenuOpen(!menuOpen)}>
-                                    <div className="user-icon">
-                                        <FaUser size={20} />
+                            <>
+                                <li className="notificacoes" ref={notificacoesRef}>
+                                    <div onClick={() => setNotificacoesOpen(!notificacoesOpen)} className="notificacao-icon">
+                                        <FaBell size={20} />
+                                        {notificacoes.length > 0 && <span className="badge">{notificacoes.length}</span>}
                                     </div>
-                                    <span>{user.name}</span>
-                                    <FaChevronDown size={14} className={`chevron-icon ${menuOpen ? 'open' : ''}`} />
-                                </div>
-                                {menuOpen && (
-                                    <div className="dropdown-menu">
-                                        <Link to="/perfil" onClick={() => { setMenuOpen(false); closeMenu(); }}>
-                                            <FaUser /> Meu Perfil
-                                        </Link>
-                                        <button onClick={handleLogout}>
-                                            <FaSignOutAlt /> Sair
-                                        </button>
+                                    {notificacoesOpen && (
+                                        <div className="dropdown-notificacoes">
+                                            {notificacoes.map(n => (
+                                                <div key={n.id} className="notificacao-item">{n.mensagem}</div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </li>
+
+                                <li className="user-menu" ref={userMenuRef}>
+                                    <div className="user-info" onClick={() => setMenuOpen(!menuOpen)}>
+                                        <div className="user-icon">
+                                            <FaUser size={20} />
+                                        </div>
+                                        <span>{user.name}</span>
+                                        <FaChevronDown size={14} className={`chevron-icon ${menuOpen ? 'open' : ''}`} />
                                     </div>
-                                )}
+                                    {menuOpen && (
+                                        <div className="dropdown-menu">
+                                            <Link to="/perfil" onClick={() => { setMenuOpen(false); closeMenu(); }}>
+                                                <FaUser /> Meu Perfil
+                                            </Link>
+                                            <button onClick={handleLogout}>
+                                                <FaSignOutAlt /> Sair
+                                            </button>
+                                        </div>
+                                    )}
+                                </li>
+                            </>
+                        )}
+
+                        {!user && (
+                            <li>
+                                <Link to="/LoginAdmin" onClick={closeMenu}>
+                                    <Button text="Login Administrador" color="green" />
+                                </Link>
                             </li>
                         )}
-                        
-                    {!user && (
-                        <li>
-                            <Link to="/LoginAdmin" onClick={closeMenu}>
-                                <Button text="Login Administrador" color="green" />
-                            </Link>
-                        </li>
-                    )}
                     </ul>
 
                     <button className="menu" onClick={toggleMenu}>
