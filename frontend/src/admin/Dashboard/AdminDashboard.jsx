@@ -28,6 +28,10 @@ function AdminDashboard() {
                         <h3>👥 Gerenciar Administradores</h3>
                         <p>Visualize, edite ou remova usuários da plataforma.</p>
                     </Link>
+                    <Link to="/listaFrequencia" className="card-funcao">
+                        <h3>📋 Lista de Frequência</h3>
+                        <p>Veja e exporte a lista de participantes por evento.</p>
+                    </Link>
                     <Link to="/editarEventos" className="card-funcao">
                         <h3>✏️ Editar Eventos</h3>
                         <p>Edite as informações do evento ou exclua o evento.</p>
