@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from "react-router-dom";
 import "./Inscricao.css";  
 import Footer from "../../components/Footer/Footer";
-import Navbar2 from "../../components/Navbar2/Navbar2";
+import NavbarAdmin from "../../components/Navbar/NavbarAdmin";
 
 const Inscricao = () => {
     
@@ -11,7 +11,7 @@ const Inscricao = () => {
     return ( 
         <div>
 
-            <Navbar2/>
+            <NavbarAdmin/>
 
             <div className="container1">
         
