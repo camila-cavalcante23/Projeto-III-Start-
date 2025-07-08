@@ -12,6 +12,6 @@ Currently, two official plugins are available:
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
 
 ## 📦 Dependência para PDF
-   - Certifique-se de instalar jspdf e jspdf-autotable no seu projeto
+   - Certifique-se de instalar jspdf e jspdf-autotable no projeto para realizar o download da frequência em PDF
    -  ```npm install jspdf jspdf-autotable```
     
