@@ -14,7 +14,7 @@ import Login from './pages/Login/Login.jsx'
 import LoginAdmin from './admin/LoginAdm/LoginAdmin.jsx'
 import Eventos from './pages/Eventos/Eventos.jsx'
 import DetalhesEvento from "./pages/Eventos/DetalhesEvento.jsx"
-import Inscricao from './admin/inscricaoEvento/inscricao.jsx'
+import Inscricao from './pages/InscricaoEvento/Inscricao.jsx'
 import GaleriaForm from './admin/GaleriaForm/GaleriaForm.jsx'
 import NewsDetail from './pages/NewsDetail/NewsDetail.jsx'
 import Register from './pages/Register/Register.jsx'
