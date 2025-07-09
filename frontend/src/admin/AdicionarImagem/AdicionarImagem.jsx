@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from 'axios';
-import './CriarNoticias.css';
+import './AdicionarImagem.css'
 import StartUFC from '../../assets/StartUFC-logo.png';
 import Navbar2 from "../../components/Navbar2/Navbar2";
 
@@ -75,4 +75,4 @@ return (
     );
 }
 
-export default CriarNoticias;
+ export default AdicionarImagem;
