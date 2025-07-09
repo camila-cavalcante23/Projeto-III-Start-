@@ -94,10 +94,10 @@ const router = createBrowserRouter([
         element: <Eventos/>
       },
 
-      {
-        path: "detalhesevento", 
-        element: <DetalhesEvento/>
-      },
+     {
+    path: "detalhesevento/:id", 
+    element: <DetalhesEvento/>
+     },
       {
         path: "inscricaoevento",
         element: <Inscricao/>

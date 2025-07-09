@@ -1,60 +1,75 @@
-import React, { useEffect, useState } from "react";
-import "./NoticiasDetalhadas.css";
-import Navbar from "../../components/Navbar/Navbar";
-import Footer  from "../../components/Footer/Footer";
-import { useParams } from "react-router-dom";
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import axios from 'axios';
+import './NoticiasDetalhadas.css';
+import Navbar2 from '../../components/Navbar2/Navbar2';
+import Footer from '../../components/Footer/Footer';
 
-function NoticiasDetalhada(){
-    const { id } = useParams();
-    const [noticia, setNoticia] = useState(null);
-    const [loading, setLoading] = useState(true);
+function NoticiaDetalhadas() {
+  const [noticia, setNoticia] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(''); 
+  const { id } = useParams();
 
-    useEffect(() => {
-        const fetchNoticia = async () => {
-            try {
-                const response = await axios.get(`http://localhost:5000/api/noticias/${id}`);
-                setNoticia(response.data);
-            } catch (err){
-                console.error("Erro ao buscar notícias", err);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchNoticia();
-    }, [id]);
+  useEffect(() => {
+  
+    const apiUrl = `http://localhost:5000/api/news/${id}`;
 
-    if(loading) return <p>Carregando...</p>;
-    if(!noticia) return <p>Notícia não encontrada.</p>;
+    const fetchNoticia = async () => {
+      try {
+        const response = await axios.get(apiUrl);
+        setNoticia(response.data);
+      } catch (err) {
+        console.error("Erro ao carregar a notícia:", err);
+        setError(`Não foi possível carregar a notícia. Verifique se a API está rodando no endereço correto. (Erro: ${err.message})`);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    return (
-        <div className="noticia-detalhada">
-            <Navbar />
-            
-            <div className="noticia-container">
-                <h2 className="titulo-noticia">Notícias</h2>
-                <h3 className="subtitulo-noticia">{noticia.titulo}</h3>
-                <p className="data-noticia">{noticia.data}</p>
+    fetchNoticia();
+  }, [id]);
 
-                <div className="imagem-noticia-container">
-                    <img src={noticia.imagem} alt="Notícia" className="imagem-noticia" />
-                
-                <div className="bolinhas">
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                </div>
-            </div>
-            <div className="texto-noticia">
-                {noticia.conteudo.split("\n").map((paragrafo, idx) => (
-                    <p key={idx}>{paragrafo}</p>
-                ))}
-            </div>
-                <button className="btn-ver-mais">Ver Mais</button>
-            </div> 
-             <Footer />
+  if (loading) {
+    return <div className="loading">Carregando notícia...</div>;
+  }
+
+  if (error) {
+    return <div className="no-news">{error}</div>;
+  }
+
+  if (!noticia) {
+    return <div className="no-news">Notícia não encontrada.</div>;
+  }
+
+  return (
+    <div className='noticia-detalhada-page'>
+      <Navbar2 />
+      <main className='noticia-detalhada-container'>
+        <div className="header-detalhes">
+          <Link to="/noticias" className="back-arrow-detalhes">←</Link>
+          <p>Notícias</p>
         </div>
-    );
+        <article className="noticia-article">
+          <h1 className="noticia-titulo">{noticia.titulo}</h1>
+          <p className="noticia-data">
+            {new Date(noticia.dataCriacao).toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' })}
+          </p>
+          <div className="image-wrapper">
+            <div className="dots dots-left"></div>
+            <img src={noticia.imageUrl || 'https://via.placeholder.com/800x500'} alt={noticia.titulo} className="noticia-imagem-principal" />
+            <div className="dots dots-right"></div>
+          </div>
+          <div className="noticia-corpo">
+            {noticia.conteudo && noticia.conteudo.split('\n').map((paragrafo, index) => (
+              <p key={index}>{paragrafo}</p>
+            ))}
+          </div>
+        </article>
+      </main>
+      <Footer />
+    </div>
+  );
 }
 
-export default NoticiasDetalhada;
+export default NoticiaDetalhadas;

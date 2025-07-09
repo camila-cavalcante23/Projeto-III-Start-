@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams, Link } from 'react-router-dom'; // useParams para pegar o ID da URL
+import { useParams, Link } from 'react-router-dom'; 
 import './DetalhesEvento.css'; 
 
 import Footer from '../../components/Footer/Footer';
@@ -7,7 +7,7 @@ import Navbar2 from '../../components/Navbar2/Navbar2';
 import Button from '../../components/Button/Button';
 import { FaCalendarAlt, FaClock, FaMapMarkerAlt } from 'react-icons/fa';
 
-// Importa a nossa fonte de dados centralizada
+
 import { mockEventos } from '../../data/dadosEventos';
 
 const DetalhesEvento = () => {
@@ -31,7 +31,7 @@ const DetalhesEvento = () => {
         );
     }
 
-    // Se o evento for encontrado, renderiza a página com seus dados
+    
     return (
         <div className="pagina-detalhes-evento">
             <Navbar2 />
@@ -45,14 +45,14 @@ const DetalhesEvento = () => {
             <main className="evento-conteudo-wrapper">
                 <section className="evento-descricao-main">
                     <h2>Sobre o Evento</h2>
-                    {/* Renderiza a descrição que pode conter HTML */}
+             
                     <div dangerouslySetInnerHTML={{ __html: evento.descricao }} />
                 </section>
 
                 <aside className="evento-info-sidebar">
                     <div className="info-card">
                         <h3>Detalhes</h3>
-                        {/* As informações só aparecem se existirem nos dados do evento */}
+                       
                         {evento.data && (
                             <div className="info-item">
                                 <FaCalendarAlt className="info-icon" />
