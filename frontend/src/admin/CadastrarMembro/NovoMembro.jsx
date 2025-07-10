@@ -4,7 +4,7 @@ import NavbarAdmin from '../../components/Navbar/NavBarAdmin';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const Register = () => {
+const NovoMembro = () => {
 
   const [name, setName] = useState('');
   const [cpf, setCpf] = useState('');
@@ -141,4 +141,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default NovoMembro;
