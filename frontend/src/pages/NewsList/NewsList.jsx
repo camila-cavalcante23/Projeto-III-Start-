@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+// 1. MUDANÇA PADRÃO: Trocamos a importação
+import api from '../../services/api';
 import './NewsList.css';
 import Button from '../../components/Button/Button';
 
@@ -9,45 +10,32 @@ const NewsList = () => {
   const [newsList, setNewsList] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // 2. MUDANÇA: Convertido para async/await e usando nossa 'api'
   useEffect(() => {
-    // 1. COLOQUE A URL REAL 
-    const apiUrl = 'URL';
-
-    axios.get(apiUrl)
-      .then(response => {
-        // 2. ESTE CONSOLE.LOG
-        // Ele vai te mostrar a estrutura exata do que o backend está enviando.
-        // Procure nele qual é o nome da propriedade que contém o array de notícias.
-        console.log('Resposta completa recebida da API:', response.data);
-
-        // =================================================================
-        // 3. PONTO PRINCIPAL DA ATUALIZAÇÃO!
-     
-        //    Estou usando 'results' como exemplo, mas pode ser 'data', 'noticias', 'items', etc.
-        //    Troque 'results' pelo nome correto que você viu no console.
-        const dadosRecebidos = response.data.results; 
-        // =================================================================
-
-        // 4. VERIFICAÇÃO DE SEGURANÇA
-        // Antes de atualizar o estado, garantimos que o que recebemos é realmente um array.
-        if (Array.isArray(dadosRecebidos)) {
-          setNewsList(dadosRecebidos);
+    const fetchNews = async () => {
+      setLoading(true);
+      try {
+        // Usamos nosso 'api' para buscar as notícias do endpoint correto
+        const response = await api.get('/api/news');
+        
+        // A sua verificação de segurança é ótima! Vamos mantê-la.
+        // Assumimos que 'response.data' é o array de notícias.
+        if (Array.isArray(response.data)) {
+          setNewsList(response.data);
         } else {
-          console.error("Erro: Os dados recebidos não são um array!", dadosRecebidos);
-          //um array vazio para não quebrar a tela.
-          setNewsList([]);
+          console.error("Erro: Os dados recebidos da API não são um array!", response.data);
+          setNewsList([]); // Define um array vazio para não quebrar a tela.
         }
-      })
-      .catch(error => {
+      } catch (error) {
         console.error('Erro ao carregar as notícias:', error);
-        // Em caso de erro na chamada, também garantimos que newsList seja um array.
-        setNewsList([]);
-      })
-      .finally(() => {
+        setNewsList([]); // Em caso de erro na chamada, também garantimos que newsList seja um array.
+      } finally {
         setLoading(false);
-      });
+      }
+    };
 
-  }, []);
+    fetchNews();
+  }, []); // O array vazio [] garante que a busca aconteça só uma vez.
 
   return (
     <section className="news-section-container" id='news-id'>
@@ -67,6 +55,7 @@ const NewsList = () => {
       ) : (
         <>
           <div className='news-grid'>
+            {/* O .slice(0, 3) mostra apenas as 3 primeiras notícias */}
             {newsList.slice(0, 3).map((news) => (
               <div key={news.id} className="news-card">
                 <img src={news.imagem} alt={news.titulo} className="news-image" />

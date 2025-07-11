@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+// 1. MUDANÇA PADRÃO: Trocamos a importação
+import api from '../../services/api';
 import './Inscricao.css';
-import NavbarAdmin from "../../components/Navbar/NavbarAdmin";
+import NavbarAdmin from "../../components/Navbar/NavBarAdmin";
 import Footer from "../../components/Footer/Footer";
 
-const mockEvents = [
-  { id: 'evt1', name: 'Palestra de Abertura', date: '2025-10-20T09:00:00', vacancies: 15 },
-  { id: 'evt2', name: 'Workshop de Design Thinking', date: '2025-10-20T14:00:00', vacancies: 5 },
-  { id: 'evt3', name: 'Mesa Redonda: O Futuro das Startups', date: '2025-10-21T11:00:00', vacancies: 8 },
-];
+// 2. REMOÇÃO: A lista de eventos de mentira foi removida.
+// const mockEvents = [...];
 
 const Inscricao = () => {
   const [events, setEvents] = useState([]);
@@ -19,11 +17,21 @@ const Inscricao = () => {
   const [success, setSuccess] = useState('');
   const navigate = useNavigate();
 
+  // 3. MUDANÇA: Agora buscamos os eventos reais da API.
   useEffect(() => {
-    setTimeout(() => {
-      setEvents(mockEvents);
-      setLoading(false);
-    }, 500);
+    const fetchEvents = async () => {
+        setLoading(true);
+        try {
+            const response = await api.get('/eventos');
+            // Filtramos para mostrar apenas eventos em andamento para inscrição
+            setEvents(response.data.filter(e => e.status === 'em-andamento')); 
+        } catch (err) {
+            setError("Não foi possível carregar os eventos.");
+        } finally {
+            setLoading(false);
+        }
+    };
+    fetchEvents();
   }, []);
 
   const handleCheckboxChange = (eventId) => {
@@ -36,22 +44,33 @@ const Inscricao = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // 4. CORREÇÃO CRÍTICA: Pegamos o ID do usuário real do localStorage.
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+        setError('Você precisa estar logado para se inscrever.');
+        return;
+    }
+
     if (selectedEvents.length === 0) {
       setError('Selecione pelo menos um evento para se inscrever.');
       return;
     }
+
     setLoading(true);
     setError('');
     setSuccess('');
+
     try {
-      const userId = 'ID_DO_USUARIO_LOGADO';
-      const response = await axios.post('https://localhost:44367/api/subscriptions', {
+      // 5. MUDANÇA PADRÃO: Usamos 'api.post' com os dados corretos.
+      const response = await api.post('/api/subscriptions', {
         userId,
         eventIds: selectedEvents,
       });
+
       if (response.status === 200) {
         setSuccess('Inscrição realizada com sucesso!');
-        setTimeout(() => navigate('/meus-eventos'), 2000);
+        setTimeout(() => navigate('/meus-eventos'), 2000); // Sugestão: talvez navegar para uma página de "meus eventos"
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Erro ao realizar inscrição.');
@@ -61,7 +80,6 @@ const Inscricao = () => {
   };
 
   return (
-
     <div className="page-wrapper">
       <NavbarAdmin />
       <div className="content-wrapper">
@@ -80,7 +98,7 @@ const Inscricao = () => {
             </div>
             <form onSubmit={handleSubmit} className="form-box">
               {loading && <p>Carregando eventos...</p>}
-              {events.map(event => (
+              {!loading && events.map(event => (
                 <div key={event.id} className="event-item">
                   <input
                     type="checkbox"

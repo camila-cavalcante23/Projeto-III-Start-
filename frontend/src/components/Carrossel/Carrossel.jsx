@@ -1,4 +1,4 @@
-// Substitua o conteúdo de /components/Carrossel/Carrossel.jsx
+
 
 import React, { useRef } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';

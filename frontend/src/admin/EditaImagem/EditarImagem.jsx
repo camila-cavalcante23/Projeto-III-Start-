@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./EditarImagem.css";
-import axios from "axios";
+
+import api from "../../services/api";
 import NavbarAdmin from "../../components/Navbar/NavbarAdmin";
 
 function EditarImagem() {
@@ -12,7 +13,8 @@ function EditarImagem() {
 
     const fetchImagens = async () => {
         try {
-            const response = await axios.get("https://localhost:44367/imagens");
+           
+            const response = await api.get("/imagens");
             setImagens(response.data);
         } catch (err) {
             console.error("Erro ao buscar imagens:", err);
@@ -22,7 +24,8 @@ function EditarImagem() {
     const handleSalvar = async (id) => {
         const imagem = imagens.find((i) => i.id === id);
         try {
-            await axios.put(`https://localhost:44367/imagens/${id}`, imagem);
+          
+            await api.put(`/imagens/${id}`, imagem);
             alert("Imagem salva com sucesso!");
         } catch (err) {
             console.error("Erro ao salvar imagem:", err);
@@ -31,7 +34,8 @@ function EditarImagem() {
 
     const handleExcluir = async (id) => {
         try {
-            await axios.delete(`https://localhost:44367/imagens/${id}`);
+           
+            await api.delete(`/imagens/${id}`);
             setImagens((prev) => prev.filter((i) => i.id !== id));
             alert("Imagem exluida com sucesso!");
         } catch (err) {
@@ -55,16 +59,19 @@ function EditarImagem() {
                 <div className="card" key={imagem.id}>
                     <img src={imagem.url} alt={imagem.titulo} />
                     <input type="text" value={imagem.titulo} onChange={(e) => handleChange(imagem.id, "titulo", e.target.value)} />
-                    <textarea value={imagem.titulo} onChange={(e) => handleChange(imagem.id, "descricao", e.target.value)} />
+                    
+               
+                    <textarea value={imagem.descricao || ''} onChange={(e) => handleChange(imagem.id, "descricao", e.target.value)} placeholder="Digite uma descrição..." />
+
                     <div className="card-buttons">
                         <button className="salvar" onClick={() => handleSalvar(imagem.id)}>Salvar</button>
                         <button className="excluir" onClick={() => handleExcluir(imagem.id)}>Excluir</button>
                     </div>
                 </div>
-            ))}
+                ))}
+            </div>
         </div>
-    </div>
-    </div>
+        </div>
     );
 }
 

@@ -5,7 +5,8 @@ import Logo from '../../assets/StartUFC-azul.png';
 import { Link, useNavigate } from "react-router-dom";
 import Button from '../../components/Button/Button';
 import { Link as ScrollLink } from 'react-scroll';
-import axios from 'axios';
+// 1. MUDANÇA PADRÃO: Trocamos a importação do axios pela nossa 'api'
+import api from '../../services/api';
 
 function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
@@ -17,26 +18,32 @@ function Navbar() {
     const notificacoesRef = useRef(null);
     const navigate = useNavigate();
 
+    // 2. MUDANÇA: Convertemos todo este bloco para async/await e usamos nossa 'api'
     useEffect(() => {
         const userId = localStorage.getItem('userId');
         if (userId) {
-            axios.get(`https://localhost:44367/users/${userId}`)
-                .then(response => {
-                    setUser(response.data);
+            const fetchUserData = async () => {
+                try {
+                    // Busca os dados do usuário
+                    const userResponse = await api.get(`/users/${userId}`);
+                    setUser(userResponse.data);
 
-                    // Simulando notificações para o usuário logado
-                    setNotificacoes([
-                        { id: 1, mensagem: "Você está inscrito no evento: Workshop React" },
-                        { id: 2, mensagem: "Novo evento publicado: Hackathon 2025" }
-                    ]);
-                })
-                .catch(error => {
-                    console.error('Erro ao pegar dados do usuário', error);
+                    // 3. MELHORIA: Agora buscamos notificações reais da API
+                    // (Confirme com seu amigo se o endpoint '/users/${userId}/notificacoes' está correto)
+                    const notificacoesResponse = await api.get(`/users/${userId}/notificacoes`);
+                    setNotificacoes(notificacoesResponse.data);
+
+                } catch (error) {
+                    console.error('Erro ao buscar dados do usuário ou notificações', error);
                     localStorage.removeItem('userId');
-                });
+                    setUser(null); // Garante que o usuário seja deslogado na interface
+                }
+            };
+            fetchUserData();
         }
     }, []);
 
+    // O useEffect abaixo, para fechar os menus, não precisa de alteração.
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
@@ -52,6 +59,7 @@ function Navbar() {
         };
     }, []);
 
+    // O resto das funções (toggleMenu, closeMenu, handleLogout, etc.) não precisam de alteração.
     const toggleMenu = () => {
         const newIsOpen = !isOpen;
         setIsOpen(newIsOpen);
@@ -81,6 +89,7 @@ function Navbar() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
         closeMenu();
     };
+
 
     return (
         <>
@@ -121,9 +130,11 @@ function Navbar() {
                                     </div>
                                     {notificacoesOpen && (
                                         <div className="dropdown-notificacoes">
-                                            {notificacoes.map(n => (
+                                            {notificacoes.length > 0 ? notificacoes.map(n => (
                                                 <div key={n.id} className="notificacao-item">{n.mensagem}</div>
-                                            ))}
+                                            )) : (
+                                                <div className="notificacao-item">Nenhuma notificação</div>
+                                            )}
                                         </div>
                                     )}
                                 </li>

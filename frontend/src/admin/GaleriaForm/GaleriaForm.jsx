@@ -3,6 +3,8 @@ import "./GaleriaForm.css";
 import Navbar2 from "../../components/Navbar2/Navbar2";
 import Button from "../../components/Button/Button";
 import { IoImagesOutline } from "react-icons/io5";
+// 1. MUDANÇA: Adicionamos a importação da nossa 'api'
+import api from "../../services/api";
 
 const GaleriaForm = () => {
     const [titulo, setTitulo] = useState("");
@@ -16,21 +18,23 @@ const GaleriaForm = () => {
         formData.append("imagem", imagem);
 
         try {
-            const resposta = await fetch("http://localhost:5000/api/galeria", {
-                method: "POST",
-                body: formData,
-            });
+            // 2. MUDANÇA: Substituímos todo o bloco 'fetch' por uma única linha com 'api.post'.
+            // O nosso 'api' (que usa Axios) já sabe o endereço e como tratar o FormData.
+            const resposta = await api.post("/api/galeria", formData);
 
-            if (resposta.ok) {
-                alert("Imagem adicionada com sucesso!");
-                setTitulo("");
-                setImagem(null);
-            } else {
-                alert("Erro ao adicionar imagem");
-            }
+            // Se a linha acima funcionou, significa que a resposta foi um sucesso (status 2xx).
+            alert("Imagem adicionada com sucesso!");
+            setTitulo("");
+            setImagem(null);
+            // Limpa o campo de arquivo para uma melhor experiência do usuário
+            document.querySelector('input[type="file"]').value = '';
+
         } catch (error) {
+            // O Axios automaticamente entra no 'catch' para respostas de erro (4xx, 5xx),
+            // o que deixa nosso código mais simples.
             console.error("Erro ao enviar imagem", error);
-            alert("Erro ao adicionar imagem");
+            const mensagemErro = error.response?.data?.message || "Erro ao adicionar imagem";
+            alert(mensagemErro);
         }
     };
 

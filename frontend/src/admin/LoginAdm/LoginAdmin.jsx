@@ -1,9 +1,8 @@
-
-
 import React, { useState } from 'react';
 import './LoginAdmin.css'; 
 import Navbar2 from "../../components/Navbar2/Navbar2";
-import axios from 'axios';
+// 1. MUDANÇA PADRÃO: Trocamos a importação do axios pela nossa 'api'
+import api from '../../services/api'; 
 import { useNavigate } from "react-router-dom";
 import { FaSpinner } from 'react-icons/fa';
 
@@ -20,11 +19,11 @@ const LoginAdmin = () => {
         setError('');
 
         try {
-            const response = await axios.post('https://localhost:44367/users/login', {
+            // 2. MUDANÇA PADRÃO: Usamos 'api.post' e removemos a URL base e os headers.
+            // O Axios já sabe que o conteúdo é JSON.
+            const response = await api.post('/users/login', {
                 email: email,
                 password: password
-            }, {
-                headers: { 'Content-Type': 'application/json' }
             });
 
             if (response.status === 200) {

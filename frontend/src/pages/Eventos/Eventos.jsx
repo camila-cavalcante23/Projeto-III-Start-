@@ -1,40 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'; // 1. Importamos o useEffect
 import { Link } from "react-router-dom";
 import "./Eventos.css";
 import Footer from "../../components/Footer/Footer";
 import Navbar2 from "../../components/Navbar2/Navbar2";
+import api from '../../services/api'; // 1. Importamos nossa api
 
-// Imagens dos eventos
-import event1 from '../../assets/event1.png';
-import event2 from '../../assets/event2.png';
-import event3 from '../../assets/event3.png';
-import event4 from '../../assets/event4.png';
-import event5 from '../../assets/event5.png';
-import event6 from '../../assets/event6.png';
-
-// dados de exemplo (com o campo "status")
-const mockEventos = [
-    { id: 1, titulo: "Palestra sobre inovação", imagem: event1, status: "em-andamento" },
-    { id: 2, titulo: "Feira de Startups", imagem: event2, status: "em-andamento" },
-    { id: 6, titulo: "Game Board", imagem: event6, status: "em-andamento" },
-    { id: 3, titulo: "Gestão Pública: O caso 2", imagem: event3, status: "encerrado" },
-    { id: 4, titulo: "Sertão do Inhamuns", imagem: event4, status: "encerrado" },
-    { id: 5, titulo: "Edital Startup Nordeste", imagem: event5, status: "encerrado" }
-];
+// 2. Removemos os dados mock e as imagens locais. As imagens virão da API.
 
 const Eventos = () => {
-    // Mantém o estado com todos os eventos
-    const [eventos, setEventos] = useState(mockEventos);
+    // 3. Iniciamos o estado de eventos como uma lista vazia
+    const [eventos, setEventos] = useState([]);
 
-    // Filtra os eventos em duas listas separadas
+    // 4. Usamos o useEffect para buscar os dados da API assim que a página carrega
+    useEffect(() => {
+        const fetchEventos = async () => {
+            try {
+                const response = await api.get('/eventos');
+                setEventos(response.data);
+            } catch (error) {
+                console.error("Erro ao buscar eventos:", error);
+            }
+        };
+        fetchEventos();
+    }, []); // Roda apenas uma vez quando o componente é montado.
+
+
+    // O resto do seu código já está perfeito!
+    // Ele vai filtrar e renderizar os eventos assim que o estado 'eventos' for preenchido.
     const eventosEmAndamento = eventos.filter(evento => evento.status === 'em-andamento');
     const eventosEncerrados = eventos.filter(evento => evento.status === 'encerrado');
 
-    // Função para renderizar um grid de eventos (evita repetição de código)
     const renderEventosGrid = (listaEventos) => (
         <div className="eventos-grid">
             {listaEventos.map(evento => (
                 <div key={evento.id} className="evento-card">
+                    {/* A 'evento.imagem' agora virá da API */}
                     <img src={evento.imagem} alt={evento.titulo} className="evento-imagem" />
                     <div className="evento-info">
                         <h3 className="evento-titulo">{evento.titulo}</h3>
@@ -56,7 +56,6 @@ const Eventos = () => {
                     <h1 className="main-title">Eventos</h1>
                 </header>
 
-                {/* Seção de Eventos em Andamento */}
                 <section className="eventos-section">
                     <h2 className="section-title">Eventos em Andamento</h2>
                     {eventosEmAndamento.length > 0 ? (
@@ -66,7 +65,6 @@ const Eventos = () => {
                     )}
                 </section>
 
-                {/* Seção de Eventos Encerrados */}
                 <section className="eventos-section">
                     <h2 className="section-title">Eventos Encerrados</h2>
                     {eventosEncerrados.length > 0 ? (

@@ -4,7 +4,8 @@ import Footer from "../../components/Footer/Footer";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import './ListaFrequencia.css';
-import axios from "axios";
+// 1. MUDANÇA PADRÃO: Trocamos a importação
+import api from "../../services/api";
 
 function ListaDeFrequencia() {
     const [eventos, setEventos] = useState([]);
@@ -12,27 +13,51 @@ function ListaDeFrequencia() {
     const [eventoSelecionado, setEventoSelecionado] = useState("");
 
     useEffect(() => {
-        axios.get("https://localhost:44367/eventos")
-            .then(res => setEventos(res.data))
-            .catch(err => console.error(err));
+        // 2. MUDANÇA: Convertido para async/await e usando 'api.get'
+        const fetchEventos = async () => {
+            try {
+                const res = await api.get("/eventos");
+                setEventos(res.data);
+            } catch (err) {
+                console.error("Erro ao buscar eventos:", err);
+            }
+        };
+        fetchEventos();
     }, []);
 
-    const buscarParticipantes = (id) => {
+    const buscarParticipantes = async (id) => {
+        // Previne uma chamada à API se o usuário selecionar a opção "Selecione um evento"
+        if (!id) {
+            setParticipantes([]);
+            setEventoSelecionado("");
+            return;
+        }
+
         setEventoSelecionado(id);
-        axios.get(`https://localhost:44367/eventos/${id}/participantes`)
-            .then(res => setParticipantes(res.data))
-            .catch(err => console.error(err));
+        try {
+            // 3. MUDANÇA: Convertido para async/await e usando 'api.get'
+            const res = await api.get(`/eventos/${id}/participantes`);
+            setParticipantes(res.data);
+        } catch (err) {
+            console.error("Erro ao buscar participantes:", err);
+            // Limpa a lista de participantes em caso de erro
+            setParticipantes([]); 
+        }
     };
 
+    // A função de exportar PDF não faz chamadas à API, então ela não precisa de alterações.
     const exportarPDF = () => {
         const doc = new jsPDF();
-        doc.text("Lista de Frequência", 14, 20);
+        const eventoAtual = eventos.find(e => e.id === eventoSelecionado);
+        const tituloEvento = eventoAtual ? eventoAtual.titulo : "Lista de Frequência";
+
+        doc.text(tituloEvento, 14, 20);
         doc.autoTable({
             startY: 30,
             head: [["Nome", "Email", "CPF"]],
             body: participantes.map(p => [p.nome, p.email, p.cpf])
         });
-        doc.save("lista_frequencia.pdf");
+        doc.save(`lista_frequencia_${tituloEvento}.pdf`);
     };
 
     return (
@@ -72,8 +97,9 @@ function ListaDeFrequencia() {
                     </>
                 )}
 
+                {/* Exibe uma mensagem se um evento foi selecionado mas não há participantes */}
                 {eventoSelecionado && participantes.length === 0 && (
-                    <p>Nenhum participante para este evento.</p>
+                    <p>Nenhum participante inscrito para este evento.</p>
                 )}
             </div>
             <Footer />

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+// 1. MUDANÇA PADRÃO: Trocamos a importação do axios
+import api from "../../services/api";
 import "./NewsDetail.css";
 import Button from "../../components/Button/Button";
 import Navbar2 from "../../components/Navbar2/Navbar2";
@@ -13,22 +14,37 @@ const NewsDetail = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    // 2. MUDANÇA: Convertido para async/await e usando nossa 'api'
     useEffect(() => {
-        axios.get(`http://localhost:5000/api/news/${id}`)
-            .then(response => {
+        const fetchNewsDetail = async () => {
+            // Garante que o estado de loading e erro sejam resetados a cada busca
+            setLoading(true);
+            setError(null);
+            try {
+                const response = await api.get(`/api/news/${id}`);
                 setNews(response.data);
-                setLoading(false);
-            })
-            .catch(error => {
+            } catch (error) {
                 console.error("Erro ao carregar a notícia:", error);
-                setError("Erro ao carregar a notícia.");
+                setError("Não foi possível carregar a notícia. Tente novamente mais tarde.");
+            } finally {
                 setLoading(false);
-            });
-    }, [id]);
+            }
+        };
+        fetchNewsDetail();
+    }, [id]); // O [id] garante que a busca é refeita se o id na URL mudar
     
-    if (!news) return <div>Carregando notícia...</div>;
+    // 3. MELHORIA: Lógica de renderização mais robusta
+    if (loading) {
+        return <div>Carregando notícia...</div>;
+    }
 
-    if (news.error) return <div>{news.error}</div>;
+    if (error) {
+        return <div>{error}</div>;
+    }
+    
+    if (!news) {
+        return <div>Notícia não encontrada.</div>;
+    }
 
     return (
         <section className="details">

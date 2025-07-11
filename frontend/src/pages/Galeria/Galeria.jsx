@@ -1,48 +1,31 @@
-import React from "react";
+import React, { useState, useEffect } from "react"; // 1. Importamos as ferramentas do React
 import "./Galeria.css"; 
 import Footer from "../../components/Footer/Footer";
 import Navbar2 from "../../components/Navbar2/Navbar2";
 import Carrossel from "../../components/Carrossel/Carrossel"; 
+import api from "../../services/api"; // 1. Importamos nossa api
 
-
-import img1 from "../../assets/Galeria1.jpg";
-import img2 from "../../assets/Galeria2.jpg";
-import img3 from "../../assets/Galeria3.jpg";
-import img4 from "../../assets/Galeria4.jpg";
-import img5 from "../../assets/Galeria5.jpg";
-import img6 from "../../assets/Galeria6.jpg";
-import img7 from "../../assets/Galeria7.jpg";
-import img8 from "../../assets/Galeria8.jpg";
-import img9 from "../../assets/Galeria9.jpg";
-import img10 from "../../assets/Galeria10.jpg";
-import img11 from "../../assets/Galeria11.jpg";
-import img12 from "../../assets/Galeria12.jpg";
-import img13 from "../../assets/Galeria13.jpg";
-import img14 from "../../assets/Galeria14.webp";
-import img15 from "../../assets/Galeria15.webp";
-import img16 from "../../assets/Galeria16.webp";
-import img17 from "../../assets/Galeria17.jpg";
-import img18 from "../../assets/Galeria18.jpg";
+// 2. Removemos os dados mock e todas as importações de imagens locais.
+// As imagens e informações da galeria agora virão do backend.
 
 const Galeria = () => {
   
-    const galeriasDeEventos = [
-        {
-          titulo: "Título do Evento 1",
-          descricao: "Pequena descrição do primeiro evento realizado.",
-          imagens: [img1, img2, img3, img4, img5, img6]
-        },
-        {
-          titulo: "Título do Evento 2",
-          descricao: "Pequena descrição do segundo evento incrível.",
-          imagens: [img7, img8, img9, img10, img11, img12]
-        },
-        {
-          titulo: "Título do Evento 3",
-          descricao: "Pequena descrição do nosso último encontro.",
-          imagens: [img13, img14, img15, img16, img17, img18]
-        }
-    ];
+    // 3. Criamos o estado para armazenar as galerias que virão da API
+    const [galerias, setGalerias] = useState([]);
+
+    // 4. Usamos o useEffect para buscar os dados da API quando a página carregar
+    useEffect(() => {
+        const fetchGalerias = async () => {
+            try {
+                // (Confirme com seu amigo se o endpoint '/galeria' está correto)
+                const response = await api.get('/galeria');
+                setGalerias(response.data);
+            } catch (error) {
+                console.error("Erro ao buscar galerias:", error);
+            }
+        };
+        fetchGalerias();
+    }, []); // O array vazio [] garante que a busca aconteça só uma vez.
 
     return (
         <div className="pagina-galeria">
@@ -50,14 +33,16 @@ const Galeria = () => {
             <div className="galeria-container-principal">
                 <h1 className="galeria-titulo-pagina">Galeria</h1>
 
-                {/* Mapeia os dados para criar cada bloco de evento */}
-                {galeriasDeEventos.map((evento, index) => (
-                    <div key={index} className="galeria-evento">
-                        <h2 className="galeria-evento-titulo">{evento.titulo}</h2>
-                        <p className="galeria-evento-descricao">{evento.descricao}</p>
+                {/* 5. Mapeamos o estado 'galerias' com os dados reais vindos da API */}
+                {galerias.map((galeria) => (
+                    <div key={galeria.id} className="galeria-evento">
+                        {/* Assumindo que o objeto 'galeria' tem os campos 'titulo' e 'descricao' */}
+                        <h2 className="galeria-evento-titulo">{galeria.titulo}</h2>
+                        <p className="galeria-evento-descricao">{galeria.descricao}</p>
                         
-                        {/* Renderiza o seu componente Carrossel para cada evento */}
-                        <Carrossel imagens={evento.imagens} />
+                        {/* Renderiza o seu componente Carrossel para cada galeria */}
+                        {/* Assumindo que o objeto 'galeria' tem um array 'imagens' com as URLs */}
+                        <Carrossel imagens={galeria.imagens} />
                     </div>
                 ))}
             </div>
@@ -67,6 +52,7 @@ const Galeria = () => {
             </div>
             <Footer /> 
         </div>
+        
     );
 };
 

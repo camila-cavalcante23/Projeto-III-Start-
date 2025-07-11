@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import './NovoMembro.css';
-import NavbarAdmin from '../../components/Navbar/NavBarAdmin';
-import axios from 'axios';
+import NavbarAdmin from "../../components/Navbar/NavbarAdmin";
+import api from '../../services/api'; 
 import { useNavigate } from 'react-router-dom';
 
-const Register = () => {
+const NovoMembro = () => { 
 
   const [name, setName] = useState('');
   const [cpf, setCpf] = useState('');
@@ -26,7 +26,7 @@ const Register = () => {
 
     const formData = new FormData();
     formData.append('name', name);
-    formData.append('cpf', cpf);
+    formData.append('cpf', cpf); // O backend espera 'cpf' ou 'matricula'? Verifique se o nome do campo está correto.
     formData.append('email', email);
     formData.append('phone', phone);
     formData.append('password', password);
@@ -36,18 +36,17 @@ const Register = () => {
     }
 
     try {
-      const response = await axios.post('https://localhost:44367/users/register', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-    });
+      // 2. MUDANÇA PADRÃO: Usamos 'api.post' e removemos a URL base.
+      // O cabeçalho 'Content-Type' é adicionado automaticamente pelo Axios
+      // quando ele detecta que você está enviando um FormData.
+      const response = await api.post('/users/register', formData);
 
-    if (response.status === 200) {
-      setSuccess('Conta criada com sucesso!');
-      setTimeout(() => {
-        navigate('/login'); 
-      }, 1500);
-    }
+      if (response.status === 200) {
+        setSuccess('Conta criada com sucesso!');
+        setTimeout(() => {
+          navigate('/login'); 
+        }, 1500);
+      }
     } catch (error) {
       setError(error.response?.data || 'Erro ao criar conta');
     } finally {
@@ -64,7 +63,6 @@ const Register = () => {
           <div></div>
           <p id='ti1' style={{ color: 'white' }}>Bem Vindo</p>
           <img className='img-logo' src="src/assets/StartUFC-logo-verde.png" alt="Logo" />
-          
           <div></div>
         </div>
         <div className="register-info-membro">
@@ -79,7 +77,7 @@ const Register = () => {
               required
             />
             <br />
-
+            {/* O label diz "Matricula", mas o código usa "cpf". Verifique qual o correto para o backend */}
             <label htmlFor="tax-number" className="register-tax-number-label-membro">Matricula:</label>
             <input
               type="text"
@@ -89,7 +87,6 @@ const Register = () => {
               required
             />
             <br />
-
             <label htmlFor="email" className="register-email-label-membro">Email:</label>
             <input
               type="email"
@@ -100,7 +97,6 @@ const Register = () => {
               required
             />
             <br />
-
             <label htmlFor="phone" className="register-phone-label-membro">Telefone:</label>
             <input
               type="tel"
@@ -111,7 +107,6 @@ const Register = () => {
               required
             />
             <br />
-
             <label htmlFor="password" className="register-password-label-membro">Senha:</label>
             <input
               type="password"
@@ -121,24 +116,19 @@ const Register = () => {
               required
             />
             <br />
-
             <label htmlFor="image" className="register-image-label-membro">Imagem (opcional):</label>
             <input
               type="file"
               className="register-image-input-membro"
-              onChange={(e) => setImage(e.target.files[0])} // Set the image file to state
+              onChange={(e) => setImage(e.target.files[0])}
             />
             <br />
-
             <button type="submit" className="create-account-button-membro" tabIndex="3">Criar Conta</button> 
           </form>
-
-          {/* {error && <p className="error">{error}</p>}
-          {success && <p className="success">{success}</p>} */}
-          </div>
         </div>
+      </div>
     </div>
   );
 };
 
-export default Register;
+export default NovoMembro;

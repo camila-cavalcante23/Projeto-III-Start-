@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import axios from 'axios';
+// 1. MUDANÇA PADRÃO: Trocamos a importação do axios
+import api from '../../services/api'; 
 import './NoticiasDetalhadas.css';
 import Navbar2 from '../../components/Navbar2/Navbar2';
 import Footer from '../../components/Footer/Footer';
@@ -12,12 +13,10 @@ function NoticiaDetalhadas() {
   const { id } = useParams();
 
   useEffect(() => {
-  
-    const apiUrl = `http://localhost:5000/api/news/${id}`;
-
     const fetchNoticia = async () => {
       try {
-        const response = await axios.get(apiUrl);
+        // 2. MUDANÇA PADRÃO: Usamos 'api.get' e removemos a URL completa
+        const response = await api.get(`/api/news/${id}`);
         setNoticia(response.data);
       } catch (err) {
         console.error("Erro ao carregar a notícia:", err);

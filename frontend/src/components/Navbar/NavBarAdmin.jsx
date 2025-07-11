@@ -4,28 +4,33 @@ import { FaBars, FaTimes, FaArrowLeft } from "react-icons/fa";
 import Logo from '../../assets/StartUFC-azul.png';
 import { Link, useNavigate } from "react-router-dom";
 import Button from '../../components/Button/Button';
-import axios from 'axios';
+// 1. MUDANÇA PADRÃO: Trocamos a importação do axios
+import api from '../../services/api';
 
-function Navbar() {
+// Renomeado para NavbarAdmin para melhor clareza
+function NavbarAdmin() { 
     const [isOpen, setIsOpen] = useState(false);
     const [user, setUser] = useState(null);
     const userMenuRef = useRef(null);
     const navigate = useNavigate();
 
+    // 2. MUDANÇA: Convertido para async/await e usando nossa 'api'
     useEffect(() => {
         const userId = localStorage.getItem('userId');
         if (userId) {
-            setUser({ id: userId, nome: "Admin" });
-            axios.get(`https://localhost:44367/users/${userId}`)
-                .then(response => {
+            const fetchUserData = async () => {
+                try {
+                    const response = await api.get(`/users/${userId}`);
                     setUser(response.data);
-                })
-                .catch(error => {
+                } catch (error) {
                     console.error('Erro ao pegar dados do usuário', error);
-                });
+                }
+            };
+            fetchUserData();
         }
     }, []);
 
+    // O restante do código não precisa de alterações na lógica de API
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
@@ -87,7 +92,7 @@ function Navbar() {
                 <ul className={isOpen ? "nav-link active" : "nav-link"}>
                     <li>
                         <Link to="/cadastrarMembro" onClick={closeMenu}>
-                            Cadastrar Novo Memmbro
+                            Cadastrar Novo Membro
                         </Link>
                     </li>
                     <li>
@@ -136,4 +141,5 @@ function Navbar() {
     );
 }
 
-export default Navbar;
+
+export default NavbarAdmin;

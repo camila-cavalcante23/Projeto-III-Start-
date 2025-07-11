@@ -3,7 +3,8 @@ import './NewsForm.css'
 import Navbar2 from '../../components/Navbar2/Navbar2';
 import { IoImagesOutline } from "react-icons/io5";
 import Button from '../../components/Button/Button'
-import axios from 'axios';
+// 1. MUDANÇA PADRÃO: Trocamos a importação do axios pela nossa 'api'
+import api from '../../services/api';
 import { useNavigate } from 'react-router-dom';
 
 function NewsForm() {
@@ -49,9 +50,8 @@ function NewsForm() {
     formDataToSend.append('imagem', image);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/news', formDataToSend, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
+      // 2. MUDANÇA PADRÃO: Usamos 'api.post' e removemos a URL base e os headers
+      const response = await api.post('/api/news', formDataToSend);
 
       setMessage('Notícia criada com sucesso!');
       setError(null);

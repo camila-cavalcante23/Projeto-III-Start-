@@ -1,60 +1,49 @@
-import React from "react";
+import React, { useState, useEffect } from "react"; // 1. Importamos as ferramentas do React
 import "./Apoiadores.css"; 
 import Footer from "../../components/Footer/Footer";
 import Navbar2 from "../../components/Navbar2/Navbar2";
-import sebrae from "../../assets/logo-sebrae.png"; 
-import corredores from "../../assets/corredores.jpg"; 
+import api from "../../services/api"; // 1. Importamos nossa 'api'
 
 const Apoiadores = () => {
+    // 2. Criamos um estado para guardar a lista de apoiadores que virá da API
+    const [apoiadores, setApoiadores] = useState([]);
+
+    // 3. Usamos o useEffect para buscar os dados da API assim que a página carrega
+    useEffect(() => {
+        const fetchApoiadores = async () => {
+            try {
+                // (Confirme com seu amigo se o endpoint '/apoiadores' está correto)
+                const response = await api.get('/apoiadores');
+                setApoiadores(response.data); // Guardamos a lista no nosso estado
+            } catch (error) {
+                console.error("Erro ao buscar apoiadores:", error);
+            }
+        };
+        fetchApoiadores();
+    }, []); // O array vazio [] garante que isso rode apenas uma vez.
+
     return (
-        // Div principal 
         <div className="apoiadores-page-wrapper">
             <Navbar2 />
-
-       
             <main className="apoiadores-container">
                 <h1 className="main-title">Conheça Nossos Parceiros</h1>
-
-   
-                <article className="supporter-block">
-                    <div className="supporter-info">
-                        <h2>Sebrae</h2>
-                        <p>
-                            O SEBRAE (Serviço Brasileiro de Apoio às Micro e Pequenas Empresas) é uma 
-                            instituição de apoio ao empreendedorismo no Brasil. Ele oferece consultoria, 
-                            capacitação e acesso a crédito para ajudar micro e pequenas empresas a crescerem e 
-                            se desenvolverem. Além disso, o SEBRAE atua fortemente na promoção da cultura empreendedora, 
-                            oferecendo suporte técnico e ferramentas para startups, ajudando-as a se estruturar e atingir 
-                            o mercado de forma mais eficiente.
-                        </p>
-                    </div>
-                    <div className="supporter-logo">
-                        <img src={sebrae} alt="Logo do Sebrae" />
-                    </div>
-                </article>
-
-              
-                <article className="supporter-block">
-                    <div className="supporter-info">
-                        <h2>Corredores Digitais</h2>
-                        <p>
-                            Pertencente à Secretaria da Ciência, Tecnologia e Educação Superior, 
-                            o Programa Corredores Digitais atua em diversas áreas da inovação, especialmente no 
-                            fomento, criação e desenvolvimento de novos negócios inovadores. <br /><br />
-                            Hoje o Corredores Digitais atua como hub de inovação em diversas linhas de atuação. 
-                            Ideação, Tração e Impacto Social, são algumas linhas de atuação do programa que busca o 
-                            desenvolvimento econômico do Estado do Ceará.
-                        </p>
-                    </div>
-                  
-                    <div className="supporter-logo">
-                         <img src={corredores} alt="Logo dos corredores" />
-
-                    </div>
-                </article>
+                
+                {/* 4. Usamos o .map para criar dinamicamente um bloco para cada apoiador vindo da API */}
+                {apoiadores.map((apoiador) => (
+                    <article className="supporter-block" key={apoiador.id}>
+                        <div className="supporter-info">
+                            {/* Assumindo que o objeto 'apoiador' tem os campos 'nome' e 'descricao' */}
+                            <h2>{apoiador.nome}</h2>
+                            <p>{apoiador.descricao}</p>
+                        </div>
+                        <div className="supporter-logo">
+                             {/* Assumindo que o objeto 'apoiador' tem o campo 'logoUrl' */}
+                            <img src={apoiador.logoUrl} alt={`Logo do ${apoiador.nome}`} />
+                        </div>
+                    </article>
+                ))}
 
             </main> 
-
             <Footer />
         </div>
     );

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./EditaNoticias.css";
-import axios from "axios";
+
+import api from "../../services/api";
 import NavbarAdmin from "../../components/Navbar/NavbarAdmin";
 
 function EditaNoticias() {
@@ -12,7 +13,8 @@ function EditaNoticias() {
 
     const fetchNoticias = async () => {
         try {
-            const response = await axios.get("https://localhost:44367/noticias");
+            // 2. MUDANÇA PADRÃO: Usamos 'api.get'
+            const response = await api.get("/noticias");
             setNoticias(response.data);
         } catch (err) {
             console.error("Erro ao buscar notícias:", err);
@@ -22,16 +24,19 @@ function EditaNoticias() {
     const handleSalvar = async (id) => {
         const noticia = noticias.find((n) => n.id === id);
         try {
-            await axios.put(`https://localhost:44367/noticias/${id}`, noticia);
+            // 3. MUDANÇA PADRÃO: Usamos 'api.put'
+            await api.put(`/noticias/${id}`, noticia);
             alert("Notícia salva com sucesso!");
         } catch (err) {
-            console.error("Erro ao excluir notícia:", err);
+            // 4. CORREÇÃO: Mensagem de erro ajustada para "salvar"
+            console.error("Erro ao salvar notícia:", err);
         }
     };
 
     const handleExcluir = async (id) => {
         try {
-            await axios.delete(`https://localhost:44367/noticias/${id}`);
+            // 5. MUDANÇA PADRÃO: Usamos 'api.delete'
+            await api.delete(`/noticias/${id}`);
             setNoticias((prev) => prev.filter((n) => n.id !== id));
             alert("Notícia excluida com sucesso!");
         } catch (err) {
@@ -41,7 +46,8 @@ function EditaNoticias() {
 
     const handleChange = (id, field, value) => {
         setNoticias((prev) => 
-            prev,map((n) => (n.id === id ? {...n, [field]: value } : n))
+           
+            prev.map((n) => (n.id === id ? {...n, [field]: value } : n))
         );
     };
 
