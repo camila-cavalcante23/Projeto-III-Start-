@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 // 1. MUDANÇA PADRÃO: Trocamos a importação
 import api from '../../services/api';
 import './Inscricao.css';
-import NavbarAdmin from "../../components/Navbar/NavBarAdmin";
+import NavbarAdmin from "../../components/";
 import Footer from "../../components/Footer/Footer";
 
 // 2. REMOÇÃO: A lista de eventos de mentira foi removida.

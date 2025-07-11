@@ -4,7 +4,7 @@ import NavbarAdmin from "../../components/Navbar/NavbarAdmin";
 import api from '../../services/api'; 
 import { useNavigate } from 'react-router-dom';
 
-const NovoMembro = () => { 
+const NovoMembro = () => {
 
   const [name, setName] = useState('');
   const [cpf, setCpf] = useState('');
