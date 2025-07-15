@@ -1,6 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.jsx'
+import { AuthProvider } from './context/AuthContext'; 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Home from "./pages/Home/Home.jsx"
 import QuemSomos from "./pages/QuemSomos/QuemSomos.jsx"
@@ -37,6 +38,7 @@ import ListaFrequencia from './admin/ListaFrequencia/ListaDeFrequencia.jsx'
 
 const router = createBrowserRouter([
   {
+    
     path: "/",
     element: <App/>,
     children: [
@@ -176,7 +178,9 @@ const router = createBrowserRouter([
 
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <RouterProvider router={router} />
-  </StrictMode>,
-)
+    <StrictMode>
+        <AuthProvider>
+            <RouterProvider router={router} />
+        </AuthProvider>
+    </StrictMode>,
+);

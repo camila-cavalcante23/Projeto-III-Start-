@@ -1,43 +1,55 @@
-import React, { useState, useEffect } from 'react'; // 1. Importamos o useEffect
+import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import "./Eventos.css";
 import Footer from "../../components/Footer/Footer";
 import Navbar2 from "../../components/Navbar2/Navbar2";
-import api from '../../services/api'; // 1. Importamos nossa api
-
-// 2. Removemos os dados mock e as imagens locais. As imagens virão da API.
+import api from '../../services/api';
 
 const Eventos = () => {
-    // 3. Iniciamos o estado de eventos como uma lista vazia
     const [eventos, setEventos] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
 
-    // 4. Usamos o useEffect para buscar os dados da API assim que a página carrega
     useEffect(() => {
         const fetchEventos = async () => {
+            setLoading(true);
+            setError('');
             try {
-                const response = await api.get('/eventos');
-                setEventos(response.data);
-            } catch (error) {
-                console.error("Erro ao buscar eventos:", error);
+                const response = await api.get('/event');
+
+                if (response.data && Array.isArray(response.data.data)) {
+                    setEventos(response.data.data);
+                } else {
+                    setEventos([]);
+                }
+            } catch (err) {
+                setError("Não foi possível carregar os eventos.");
+            } finally {
+                setLoading(false);
             }
         };
         fetchEventos();
-    }, []); // Roda apenas uma vez quando o componente é montado.
+    }, []);
 
+    // Lógica de filtragem baseada na data do evento
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
 
-    // O resto do seu código já está perfeito!
-    // Ele vai filtrar e renderizar os eventos assim que o estado 'eventos' for preenchido.
-    const eventosEmAndamento = eventos.filter(evento => evento.status === 'em-andamento');
-    const eventosEncerrados = eventos.filter(evento => evento.status === 'encerrado');
+    // A API envia a data como uma string ISO (ex: "2025-08-15T00:00:00")
+    const eventosEmAndamento = eventos.filter(evento => new Date(evento.date) >= hoje);
+    const eventosEncerrados = eventos.filter(evento => new Date(evento.date) < hoje);
 
     const renderEventosGrid = (listaEventos) => (
         <div className="eventos-grid">
             {listaEventos.map(evento => (
                 <div key={evento.id} className="evento-card">
-                    {/* A 'evento.imagem' agora virá da API */}
-                    <img src={evento.imagem} alt={evento.titulo} className="evento-imagem" />
+                    <img 
+                        src={evento.imageUrl || `https://placehold.co/600x400/a7e5d5/333333?text=${encodeURIComponent(evento.name)}`} 
+                        alt={evento.name} 
+                        className="evento-imagem" 
+                    />
                     <div className="evento-info">
-                        <h3 className="evento-titulo">{evento.titulo}</h3>
+                        <h3 className="evento-titulo">{evento.name}</h3>
                         <Link to={`/detalhesevento/${evento.id}`} className="evento-botao">
                             Conheça o evento
                         </Link>
@@ -50,18 +62,21 @@ const Eventos = () => {
     return (
         <div className="eventos-page">
             <Navbar2 />
-
             <main className="eventos-container">
                 <header className="eventos-header">
                     <h1 className="main-title">Eventos</h1>
                 </header>
 
                 <section className="eventos-section">
-                    <h2 className="section-title">Eventos em Andamento</h2>
-                    {eventosEmAndamento.length > 0 ? (
+                    <h2 className="section-title">Próximos Eventos</h2>
+                    {loading ? (
+                        <p className="eventos-placeholder">Carregando...</p>
+                    ) : error ? (
+                        <p className="eventos-placeholder">{error}</p>
+                    ) : eventosEmAndamento.length > 0 ? (
                         renderEventosGrid(eventosEmAndamento)
                     ) : (
-                        <p className="eventos-placeholder">Nenhum evento em andamento no momento.</p>
+                        <p className="eventos-placeholder">Nenhum evento futuro no momento.</p>
                     )}
                 </section>
 
@@ -74,7 +89,6 @@ const Eventos = () => {
                     )}
                 </section>
             </main>
-
             <Footer />
         </div>
     );

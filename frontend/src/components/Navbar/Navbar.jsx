@@ -5,12 +5,13 @@ import Logo from '../../assets/StartUFC-azul.png';
 import { Link, useNavigate } from "react-router-dom";
 import Button from '../../components/Button/Button';
 import { Link as ScrollLink } from 'react-scroll';
-// 1. MUDANÇA PADRÃO: Trocamos a importação do axios pela nossa 'api'
+
+//  gestor de autenticação
+import { useAuth } from '../../context/AuthContext';
 import api from '../../services/api';
 
 function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
-    const [user, setUser] = useState(null);
     const [menuOpen, setMenuOpen] = useState(false);
     const [notificacoesOpen, setNotificacoesOpen] = useState(false);
     const [notificacoes, setNotificacoes] = useState([]);
@@ -18,32 +19,26 @@ function Navbar() {
     const notificacoesRef = useRef(null);
     const navigate = useNavigate();
 
-    // 2. MUDANÇA: Convertemos todo este bloco para async/await e usamos nossa 'api'
+   
+    const { user, logout } = useAuth();
+
     useEffect(() => {
-        const userId = localStorage.getItem('userId');
-        if (userId) {
-            const fetchUserData = async () => {
+        if (user) {
+            const fetchNotificacoes = async () => {
                 try {
-                    // Busca os dados do usuário
-                    const userResponse = await api.get(`/users/${userId}`);
-                    setUser(userResponse.data);
-
-                    // 3. MELHORIA: Agora buscamos notificações reais da API
-                    // (Confirme com seu amigo se o endpoint '/users/${userId}/notificacoes' está correto)
-                    const notificacoesResponse = await api.get(`/users/${userId}/notificacoes`);
-                    setNotificacoes(notificacoesResponse.data);
-
+                   
+                    // Assumindo que o ID do usuário está no token como 'nameid' ou 'sub'
+                    const userId = user.nameid || user.sub; 
+                    const response = await api.get(`/users/${userId}/notificacoes`);
+                    setNotificacoes(response.data);
                 } catch (error) {
-                    console.error('Erro ao buscar dados do usuário ou notificações', error);
-                    localStorage.removeItem('userId');
-                    setUser(null); // Garante que o usuário seja deslogado na interface
+                    console.error('Erro ao buscar notificações', error);
                 }
             };
-            fetchUserData();
+            fetchNotificacoes();
         }
-    }, []);
+    }, [user]);
 
-    // O useEffect abaixo, para fechar os menus, não precisa de alteração.
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
@@ -59,27 +54,18 @@ function Navbar() {
         };
     }, []);
 
-    // O resto das funções (toggleMenu, closeMenu, handleLogout, etc.) não precisam de alteração.
     const toggleMenu = () => {
-        const newIsOpen = !isOpen;
-        setIsOpen(newIsOpen);
-        if (newIsOpen) {
-            document.body.classList.add('menu-aberto');
-        } else {
-            document.body.classList.remove('menu-aberto');
-        }
+        setIsOpen(!isOpen);
     };
 
     const closeMenu = () => {
         if (isOpen) {
             setIsOpen(false);
-            document.body.classList.remove('menu-aberto');
         }
     };
 
     const handleLogout = () => {
-        localStorage.removeItem('userId');
-        setUser(null);
+        logout();
         setMenuOpen(false);
         closeMenu();
         navigate('/');
@@ -90,7 +76,6 @@ function Navbar() {
         closeMenu();
     };
 
-
     return (
         <>
             <nav>
@@ -99,6 +84,11 @@ function Navbar() {
                         <img src={Logo} alt="StartUFC Logo" className='navbar-logo' />
                     </Link>
                     <ul className={isOpen ? "nav-link active" : "nav-link"}>
+                        
+                        {/* ==================================================================== */}
+                        {/* ||              LINKS SEMPRE VISÍVEIS          || */}
+                        {/* ==================================================================== */}
+                        {/* Estes links agora estão fora da condição, então sempre aparecerão. */}
                         <li>
                             <ScrollLink to="about-id" smooth={true} offset={-70} duration={500} onClick={closeMenu}>
                                 Quem Somos
@@ -115,13 +105,23 @@ function Navbar() {
                             </ScrollLink>
                         </li>
 
+                        {/* A lógica condicional agora aplica-se apenas aos botões de autenticação */}
                         {!user ? (
-                            <li>
-                                <Link to="/login" onClick={closeMenu}>
-                                    <Button text="Login" color="green" />
-                                </Link>
-                            </li>
+                            // Se NÃO houver utilizador, mostra os botões de Login
+                            <>
+                                <li>
+                                    <Link to="/login" onClick={closeMenu}>
+                                        <Button text="Login" color="green" />
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link to="/LoginAdmin" onClick={closeMenu}>
+                                        <Button text="Login Administrador" color="green" />
+                                    </Link>
+                                </li>
+                            </>
                         ) : (
+                            // Se HOUVER utilizador, mostra o menu de perfil e notificações
                             <>
                                 <li className="notificacoes" ref={notificacoesRef}>
                                     <div onClick={() => setNotificacoesOpen(!notificacoesOpen)} className="notificacao-icon">
@@ -130,20 +130,18 @@ function Navbar() {
                                     </div>
                                     {notificacoesOpen && (
                                         <div className="dropdown-notificacoes">
-                                            {notificacoes.length > 0 ? notificacoes.map(n => (
-                                                <div key={n.id} className="notificacao-item">{n.mensagem}</div>
+                                            {notificacoes.length > 0 ? notificacoes.map((n, index) => (
+                                                <div key={index} className="notificacao-item">{n.mensagem}</div>
                                             )) : (
                                                 <div className="notificacao-item">Nenhuma notificação</div>
                                             )}
                                         </div>
                                     )}
                                 </li>
-
                                 <li className="user-menu" ref={userMenuRef}>
                                     <div className="user-info" onClick={() => setMenuOpen(!menuOpen)}>
-                                        <div className="user-icon">
-                                            <FaUser size={20} />
-                                        </div>
+                                        <div className="user-icon"><FaUser size={20} /></div>
+                                        {/* O nome vem do token JWT, que o nosso AuthContext decodificou */}
                                         <span>{user.name}</span>
                                         <FaChevronDown size={14} className={`chevron-icon ${menuOpen ? 'open' : ''}`} />
                                     </div>
@@ -160,16 +158,7 @@ function Navbar() {
                                 </li>
                             </>
                         )}
-
-                        {!user && (
-                            <li>
-                                <Link to="/LoginAdmin" onClick={closeMenu}>
-                                    <Button text="Login Administrador" color="green" />
-                                </Link>
-                            </li>
-                        )}
                     </ul>
-
                     <button className="menu" onClick={toggleMenu}>
                         {isOpen ? <FaTimes /> : <FaBars />}
                     </button>

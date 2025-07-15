@@ -2,37 +2,48 @@ import React, { useEffect, useState } from "react";
 import './Perfil.css';
 import seta from '../../assets/seta2.png';
 import logo from '../../assets/StartUFC-logo-verde.png';
-// 1. Importamos as ferramentas necessárias
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../../services/api';
 
+// 1. IMPORTAMOS O NOSSO GESTOR DE AUTENTICAÇÃO
+import { useAuth } from '../../context/AuthContext';
+
 const Perfil = () => {
-    // 2. Criamos os estados para guardar os dados, o carregamento e os erros
-    const [user, setUser] = useState(null);
-    const [eventos, setEventos] = useState([]);
+    // 2. OBTEMOS O UTILIZADOR E A FUNÇÃO DE LOGOUT DO NOSSO CONTEXTO
+    // O 'user' já contém as informações decodificadas do token (como nome, email e id).
+    const { user, logout } = useAuth();
+    
+    // Este estado guardará os detalhes completos do utilizador que vêm da API
+    const [userDetails, setUserDetails] = useState(null);
+    const [eventos, setEventos] = useState([]); // Mantemos o estado para os eventos
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
-    // 3. O useEffect agora busca DUAS informações da API: os dados do usuário e os seus eventos inscritos.
     useEffect(() => {
-        const userId = localStorage.getItem("userId");
-        if (!userId) {
-            // Se não há usuário logado, redireciona para a página de login
+        // 3. VERIFICAMOS SE O UTILIZADOR EXISTE NO CONTEXTO
+        // Se não houver 'user', significa que não está logado.
+        if (!user) {
             navigate('/login');
             return;
         }
 
         const fetchProfileData = async () => {
             try {
-                // 4. Usando Promise.all para buscar dados em paralelo, o que é mais eficiente
-                const [userResponse, eventosResponse] = await Promise.all([
-                    api.get(`/users/${userId}`),
-                    api.get(`/users/${userId}/eventos`) // Confirme este endpoint com seu amigo
-                ]);
+                // O ID do utilizador agora vem diretamente do nosso objeto 'user' do contexto.
+                // A propriedade pode ser 'nameid' ou 'sub', dependendo de como o token foi gerado.
+                const userId = user.nameid || user.sub;
 
-                setUser(userResponse.data);
+                // Buscamos os detalhes completos do utilizador
+                const userResponse = await api.get(`/user/${userId}`);
+                setUserDetails(userResponse.data.data);
+
+                // NOTA: A busca de eventos foi comentada porque o endpoint `/user/${userId}/eventos`
+                // não parece existir no backend. Quando o seu colega o criar, podemos descomentar esta parte.
+                /*
+                const eventosResponse = await api.get(`/user/${userId}/eventos`);
                 setEventos(eventosResponse.data);
+                */
 
             } catch (err) {
                 console.error("Erro ao buscar dados do perfil:", err);
@@ -43,23 +54,25 @@ const Perfil = () => {
         };
 
         fetchProfileData();
-    }, [navigate]);
+    }, [user, navigate]); // A dependência [user] garante que isto roda quando o utilizador muda
 
-    // 5. Funções para os botões de ação
+    // 4. A FUNÇÃO DE LOGOUT AGORA USA O MÉTODO CENTRAL DO CONTEXTO
     const handleLogout = () => {
-        localStorage.removeItem('userId');
+        logout();
         navigate('/login');
     };
 
     const handleDeleteAccount = async () => {
-        if (window.confirm("Tem certeza que deseja excluir sua conta? Esta ação não pode ser desfeita.")) {
+        // Usamos uma confirmação simples, mas o ideal seria um modal personalizado.
+        if (confirm("Tem certeza que deseja excluir sua conta? Esta ação não pode ser desfeita.")) {
             try {
-                await api.delete(`/users/${user.id}`);
-                alert("Conta excluída com sucesso.");
-                handleLogout(); // Desloga o usuário após excluir a conta
+                const userId = user.nameid || user.sub;
+                await api.delete(`/user/${userId}`);
+                // Usamos a função de logout central para limpar tudo
+                handleLogout(); 
             } catch (err) {
                 console.error("Erro ao excluir conta:", err);
-                alert("Não foi possível excluir a conta. Tente novamente.");
+                setError("Não foi possível excluir a conta. Tente novamente.");
             }
         }
     };
@@ -85,13 +98,16 @@ const Perfil = () => {
             <div className="perfil-container">
                 <h2>Perfil do Usuário</h2>
                 <div className="traco1"></div>
-                {user ? (
+                {/* 5. MOSTRAMOS OS DADOS VINDOS DO 'userDetails' */}
+                {userDetails ? (
                     <>
-                        <img src={user.foto || 'https://via.placeholder.com/150'} alt="Foto do usuário" className="foto-perfil" />
-                        <p><strong>Nome:</strong> {user.nome}</p>
-                        <p><strong>Email:</strong> {user.email}</p>
-                        <p><strong>CPF:</strong> {user.cpf}</p>
-                        <p><strong>Telefone:</strong> {user.telefone}</p>
+                        <img src={userDetails.foto || 'https://placehold.co/150x150/a7e5d5/333333?text=Perfil'} alt="Foto do usuário" className="foto-perfil" />
+                        <p><strong>Nome:</strong> {userDetails.name}</p>
+                        <p><strong>Email:</strong> {userDetails.email}</p>
+                        {/* As propriedades Cpf e Phone precisam de ser retornadas pela API no endpoint GetById */}
+                        <p><strong>CPF:</strong> {userDetails.cpf || 'Não informado'}</p>
+                        <p><strong>Telefone:</strong> {userDetails.phone || 'Não informado'}</p>
+                        
                         <div className="traco2"></div>
                         <h3 className="config">Eventos Cadastrados</h3>
                         {eventos.length > 0 ? (
@@ -106,7 +122,6 @@ const Perfil = () => {
                             <p>Você não está cadastrado em nenhum evento.</p>
                         )}
                         <h3 className="config">Configurações</h3>
-                        {/* 6. Botões agora são funcionais */}
                         <div className="botoes">
                             <Link to="/editar-perfil">
                                 <button className="edit1">Editar Perfil</button>
