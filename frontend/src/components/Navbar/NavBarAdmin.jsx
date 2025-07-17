@@ -1,40 +1,32 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './NavBarAdmn.css';
-import { FaBars, FaTimes, FaArrowLeft } from "react-icons/fa";
+import './NavbarAdmn.css';
+import { FaBars, FaTimes, FaUser, FaSignOutAlt, FaChevronDown, FaBell } from "react-icons/fa";
 import Logo from '../../assets/StartUFC-azul.png';
 import { Link, useNavigate } from "react-router-dom";
-import Button from '../../components/Button/Button';
-// 1. MUDANÇA PADRÃO: Trocamos a importação do axios
+import Button from '../Button/Button';
+import { Link as ScrollLink } from 'react-scroll';
+
+//  gestor de autenticação
+import { useAuth } from '../../context/AuthContext';
 import api from '../../services/api';
 
-// Renomeado para NavbarAdmin para melhor clareza
-function NavbarAdmin() { 
+function NavbarAdmin() {
     const [isOpen, setIsOpen] = useState(false);
-    const [user, setUser] = useState(null);
+    const [menuOpen, setMenuOpen] = useState(false);
     const userMenuRef = useRef(null);
+    const notificacoesRef = useRef(null);
     const navigate = useNavigate();
 
-    // 2. MUDANÇA: Convertido para async/await e usando nossa 'api'
-    useEffect(() => {
-        const userId = localStorage.getItem('userId');
-        if (userId) {
-            const fetchUserData = async () => {
-                try {
-                    const response = await api.get(`/users/${userId}`);
-                    setUser(response.data);
-                } catch (error) {
-                    console.error('Erro ao pegar dados do usuário', error);
-                }
-            };
-            fetchUserData();
-        }
-    }, []);
+   
+    const { user, logout } = useAuth();
 
-    // O restante do código não precisa de alterações na lógica de API
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
-                setIsOpen(false);
+                setMenuOpen(false);
+            }
+            if (notificacoesRef.current && !notificacoesRef.current.contains(event.target)) {
+                setNotificacoesOpen(false);
             }
         };
         document.addEventListener('mousedown', handleClickOutside);
@@ -44,25 +36,18 @@ function NavbarAdmin() {
     }, []);
 
     const toggleMenu = () => {
-        const newIsOpen = !isOpen;
-        setIsOpen(newIsOpen);
-        if (newIsOpen) {
-            document.body.classList.add('menu-aberto');
-        } else {
-            document.body.classList.remove('menu-aberto');
-        }
+        setIsOpen(!isOpen);
     };
 
     const closeMenu = () => {
         if (isOpen) {
             setIsOpen(false);
-            document.body.classList.remove('menu-aberto');
         }
     };
 
     const handleLogout = () => {
-        localStorage.removeItem('userId');
-        setUser(null);
+        logout();
+        setMenuOpen(false);
         closeMenu();
         navigate('/');
     };
@@ -72,25 +57,20 @@ function NavbarAdmin() {
         closeMenu();
     };
 
-    const handleGoBack = () => {
-        navigate(-1);
-    };
-
     return (
-        <nav>
-            <div className='navbar'>
-                <div className="navbar-left">
-                    <button onClick={handleGoBack} className="btn-voltar">
-                        <FaArrowLeft /> Voltar
-                    </button>
-
+        <>
+            <nav>
+                <div className='navbar'>
                     <Link to="/" onClick={handleLogoClick}>
                         <img src={Logo} alt="StartUFC Logo" className='navbar-logo' />
                     </Link>
-                </div>
-
-                <ul className={isOpen ? "nav-link active" : "nav-link"}>
-                    <li>
+                    <ul className={isOpen ? "nav-link active" : "nav-link"}>
+                        
+                        {/* ==================================================================== */}
+                        {/* ||              LINKS SEMPRE VISÍVEIS          || */}
+                        {/* ==================================================================== */}
+                        {/* Estes links agora estão fora da condição, então sempre aparecerão. */}
+    <li>
                         <Link to="/cadastrarMembro" onClick={closeMenu}>
                             Cadastrar Novo Membro
                         </Link>
@@ -110,36 +90,53 @@ function NavbarAdmin() {
                             Últimas Notícias
                         </Link>
                     </li>
-                    <button onClick={handleLogout} className="btn-logout">
-                        Logout
+
+                        {/* A lógica condicional agora aplica-se apenas aos botões de autenticação */}
+                        {!user ? (
+                            // Se NÃO houver utilizador, mostra os botões de Login
+                            <>
+                                <li>
+                                    <Link to="/login" onClick={closeMenu}>
+                                        <Button text="Login" color="green" />
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link to="/LoginAdmin" onClick={closeMenu}>
+                                        <Button text="Login Administrador" color="green" />
+                                    </Link>
+                                </li>
+                            </>
+                        ) : (
+                            // Se HOUVER utilizador, mostra o menu de perfil e notificações
+                            <>
+                                <li className="user-menu" ref={userMenuRef}>
+                                    <div className="user-info" onClick={() => setMenuOpen(!menuOpen)}>
+                                        <div className="user-icon"><FaUser size={20} /></div>
+                                        {/* O nome vem do token JWT, que o nosso AuthContext decodificou */}
+                                        <span>{user.name}</span>
+                                        <FaChevronDown size={14} className={`chevron-icon ${menuOpen ? 'open' : ''}`} />
+                                    </div>
+                                    {menuOpen && (
+                                        <div className="dropdown-menu">
+                                            <Link to="/perfil" onClick={() => { setMenuOpen(false); closeMenu(); }}>
+                                                <FaUser /> Meu Perfil
+                                            </Link>
+                                            <button onClick={handleLogout}>
+                                                <FaSignOutAlt /> Sair
+                                            </button>
+                                        </div>
+                                    )}
+                                </li>
+                            </>
+                        )}
+                    </ul>
+                    <button className="menu" onClick={toggleMenu}>
+                        {isOpen ? <FaTimes /> : <FaBars />}
                     </button>
-
-
-                    {!user && (
-                        <li>
-                            <Link to="/LoginAdmin" onClick={closeMenu}>
-                                <Button text="Login Administrador" color="green" />
-                            </Link>
-                        </li>
-                    )}
-
-                    {user && (
-                        <li className='user-info'>
-                            <img
-                                src={user.foto || 'https://via.placeholder.com/40'} 
-                                alt="Perfil"
-                                className="user-avatar"
-                            />
-                        </li>
-                    )}
-                </ul>
-                <button className="menu" onClick={toggleMenu}>
-                    {isOpen ? <FaTimes /> : <FaBars />}
-                </button>
-            </div>
-        </nav>
+                </div>
+            </nav>
+        </>
     );
 }
-
 
 export default NavbarAdmin;

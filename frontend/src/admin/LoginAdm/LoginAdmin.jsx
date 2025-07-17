@@ -11,29 +11,48 @@ const LoginAdmin = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const navigate = useNavigate(); 
+    const navigate = useNavigate();
+    //useAuth(); 
 
-    const handleLogin = async (e) => {
+const [loading, setLoading] = useState(false); // Adicionando estado de loading
+
+      const handleLogin = async (e) => {
         e.preventDefault();
-        setIsLoading(true);
+        setLoading(true);
         setError('');
 
-        try {
-            // 2. MUDANÇA PADRÃO: Usamos 'api.post' e removemos a URL base e os headers.
-            // O Axios já sabe que o conteúdo é JSON.
-            const response = await api.post('/users/login', {
-                email: email,
-                password: password
-            });
+        // 1. DADOS CORRETOS PARA A API
+        // O backend espera um objeto com as propriedades 'Login' e 'Password'
+        const loginData = {
+            Login: email,
+            Password: password
+        };
 
-            if (response.status === 200) {
-                localStorage.setItem('userId', response.data.id); 
-                navigate("/"); 
+        try {
+            // 2. ENDPOINT CORRETO
+            // A rota correta é '/authenticate/authenticate'
+            const response = await api.post('/authenticate/authenticate', loginData);
+
+            // 3. LÓGICA DE SUCESSO CORRETA (TRATAMENTO DO TOKEN)
+            if (response.status === 200 && response.data.success) {
+                // O token JWT é a "chave" que a API nos dá
+                const token = response.data.data.jwtToken;
+
+                // Guardamos o token no localStorage para o utilizador continuar logado
+                localStorage.setItem('authToken', token);
+
+                // Configuramos o 'api' para enviar o token em todas as futuras requisições
+                api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+                // Redirecionamos para a página principal ou para um dashboard
+                navigate("/adminDashboard");
             }
-        } catch (error) {
-            setError(error.response?.data || "Erro ao fazer login");
+        } catch (err) {
+            // 4. TRATAMENTO DE ERRO MELHORADO
+            const errorMessage = err.response?.data?.message || 'Email ou senha inválidos. Tente novamente.';
+            setError(errorMessage);
         } finally {
-            setIsLoading(false);
+            setLoading(false);
         }
     };
 

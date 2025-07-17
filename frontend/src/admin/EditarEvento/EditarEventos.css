@@ -89,6 +89,23 @@
   background-color: #e53935;
 }
 
+.mensagem {
+    color: green;
+    background-color: #e6ffe6;
+    border: 1px solid #b3ffb3;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.mensagem.error {
+    color: red;
+    background-color: #ffe6e6;
+    border: 1px solid #ffb3b3;
+}
+
 /* Responsivo */
 @media (max-width: 600px) {
   .grid-cards {
