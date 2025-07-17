@@ -1,64 +1,53 @@
 import React, { useState } from 'react';
 import './LoginAdmin.css'; 
 import Navbar2 from "../../components/Navbar2/Navbar2";
-// 1. MUDANÇA PADRÃO: Trocamos a importação do axios pela nossa 'api'
 import api from '../../services/api'; 
 import { useNavigate } from "react-router-dom";
 import { FaSpinner } from 'react-icons/fa';
+import { useAuth } from '../../context/AuthContext'; // <--- Importe useAuth
 
 const LoginAdmin = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false); // Mantendo isLoading para o botão
     const navigate = useNavigate();
-    //useAuth(); 
+    
+    const { login } = useAuth(); // <--- Pegue a função 'login' do seu AuthContext
 
-const [loading, setLoading] = useState(false); // Adicionando estado de loading
-
-      const handleLogin = async (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
-        setLoading(true);
+        setIsLoading(true); // Usar isLoading para o botão, renomeei para consistência
         setError('');
 
-        // 1. DADOS CORRETOS PARA A API
-        // O backend espera um objeto com as propriedades 'Login' e 'Password'
         const loginData = {
             Login: email,
             Password: password
         };
 
         try {
-            // 2. ENDPOINT CORRETO
-            // A rota correta é '/authenticate/authenticate'
             const response = await api.post('/authenticate/authenticate', loginData);
 
-            // 3. LÓGICA DE SUCESSO CORRETA (TRATAMENTO DO TOKEN)
             if (response.status === 200 && response.data.success) {
-                // O token JWT é a "chave" que a API nos dá
                 const token = response.data.data.jwtToken;
+                
+                // Chame a função 'login' do AuthContext para definir o token e o usuário
+                login(token); // Isso vai armazenar o token e decodificar o usuário no contexto
 
-                // Guardamos o token no localStorage para o utilizador continuar logado
-                localStorage.setItem('authToken', token);
-
-                // Configuramos o 'api' para enviar o token em todas as futuras requisições
-                api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-
-                // Redirecionamos para a página principal ou para um dashboard
+                // Redireciona para a página principal do administrador
                 navigate("/adminDashboard");
             }
         } catch (err) {
-            // 4. TRATAMENTO DE ERRO MELHORADO
             const errorMessage = err.response?.data?.message || 'Email ou senha inválidos. Tente novamente.';
             setError(errorMessage);
         } finally {
-            setLoading(false);
+            setIsLoading(false);
         }
     };
 
     return (
         <div>
-            <Navbar2 />
+            <Navbar2 /> {/* Se sua Navbar principal é a Navbar2, ela precisa do AuthContext também */}
     
             <div className="container-login-admin">
                 <div className="side-bar-login-admin">

@@ -1,3 +1,4 @@
+// Seu NavbarAdmin.jsx (já está quase correto)
 import React, { useState, useEffect, useRef } from 'react';
 import './NavbarAdmn.css';
 import { FaBars, FaTimes, FaUser, FaSignOutAlt, FaChevronDown, FaBell } from "react-icons/fa";
@@ -6,28 +7,29 @@ import { Link, useNavigate } from "react-router-dom";
 import Button from '../Button/Button';
 import { Link as ScrollLink } from 'react-scroll';
 
-//  gestor de autenticação
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/AuthContext'; // <--- Garanta que esta importação está correta
 import api from '../../services/api';
 
 function NavbarAdmin() {
     const [isOpen, setIsOpen] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
     const userMenuRef = useRef(null);
-    const notificacoesRef = useRef(null);
+    const notificacoesRef = useRef(null); // Você tinha isso, mas o endpoint 404 para notificações ainda existe
     const navigate = useNavigate();
+    
+    const { user, logout } = useAuth(); // <--- Se 'user' está vindo daqui, ele deve ser reativo.
 
-   
-    const { user, logout } = useAuth();
+    // Removi a parte de notificações por enquanto, já que o endpoint está dando 404.
+    // Você pode re-adicionar quando o backend de notificações estiver pronto.
 
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
                 setMenuOpen(false);
             }
-            if (notificacoesRef.current && !notificacoesRef.current.contains(event.target)) {
-                setNotificacoesOpen(false);
-            }
+            // if (notificacoesRef.current && !notificacoesRef.current.contains(event.target)) {
+            //     setNotificacoesOpen(false);
+            // }
         };
         document.addEventListener('mousedown', handleClickOutside);
         return () => {
@@ -46,10 +48,10 @@ function NavbarAdmin() {
     };
 
     const handleLogout = () => {
-        logout();
+        logout(); // Chame a função logout do contexto
         setMenuOpen(false);
         closeMenu();
-        navigate('/');
+        navigate('/'); // Redirecionar para a home após logout
     };
 
     const handleLogoClick = () => {
@@ -67,33 +69,39 @@ function NavbarAdmin() {
                     <ul className={isOpen ? "nav-link active" : "nav-link"}>
                         
                         {/* ==================================================================== */}
-                        {/* ||              LINKS SEMPRE VISÍVEIS          || */}
+                        {/* ||           LINKS SEMPRE VISÍVEIS (movi para Navbar2)          || */}
                         {/* ==================================================================== */}
-                        {/* Estes links agora estão fora da condição, então sempre aparecerão. */}
-    <li>
-                        <Link to="/cadastrarMembro" onClick={closeMenu}>
-                            Cadastrar Novo Membro
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to="/eventosExclusivos" onClick={closeMenu}>
-                            Eventos Exclusivos
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to="/adicionarImagem" onClick={closeMenu}>
-                            Adicionar Imagens
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to="/ultimasNoticias" onClick={closeMenu}>
-                            Últimas Notícias
-                        </Link>
-                    </li>
+                        {/* Esses links (Cadastrar Membro, Eventos Exclusivos, etc.)
+                           normalmente estariam na Navbar principal (Navbar2).
+                           Se esta NavbarAdmin é APENAS para o painel de admin,
+                           então esses links podem ser removidos daqui ou mantidos se fizerem sentido.
+                           Para um admin, alguns desses links podem ser painéis de gerenciamento.
+                           Para simplificar a depuração, considere se NavbarAdmin realmente precisa de TUDO isso.
+                           Mantenho como estava, mas é uma observação.
+                        */}
+                        <li>
+                            <Link to="/cadastrarMembro" onClick={closeMenu}>
+                                Cadastrar Novo Membro
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to="/eventosExclusivos" onClick={closeMenu}>
+                                Eventos Exclusivos
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to="/adicionarImagem" onClick={closeMenu}>
+                                Adicionar Imagens
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to="/ultimasNoticias" onClick={closeMenu}>
+                                Últimas Notícias
+                            </Link>
+                        </li>
 
                         {/* A lógica condicional agora aplica-se apenas aos botões de autenticação */}
-                        {!user ? (
-                            // Se NÃO houver utilizador, mostra os botões de Login
+                        {!user ? ( // <--- Se 'user' for null ou undefined, mostra botões de login
                             <>
                                 <li>
                                     <Link to="/login" onClick={closeMenu}>
@@ -106,14 +114,12 @@ function NavbarAdmin() {
                                     </Link>
                                 </li>
                             </>
-                        ) : (
-                            // Se HOUVER utilizador, mostra o menu de perfil e notificações
+                        ) : ( // <--- Se 'user' tiver valor, mostra menu de perfil
                             <>
                                 <li className="user-menu" ref={userMenuRef}>
                                     <div className="user-info" onClick={() => setMenuOpen(!menuOpen)}>
                                         <div className="user-icon"><FaUser size={20} /></div>
-                                        {/* O nome vem do token JWT, que o nosso AuthContext decodificou */}
-                                        <span>{user.name}</span>
+                                        <span>{user.name}</span> {/* user.name deve vir do AuthContext */}
                                         <FaChevronDown size={14} className={`chevron-icon ${menuOpen ? 'open' : ''}`} />
                                     </div>
                                     {menuOpen && (

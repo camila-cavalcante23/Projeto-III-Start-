@@ -66,6 +66,20 @@ background-color: #fff;
   resize: vertical;
 }
 
+.formulario-evento input[type="datetime-local"] {
+  padding: 10px;
+  border: 1px solid #bbb;
+  border-radius: 6px;
+  font-size: 15px;
+}
+
+.formulario-evento input[type=number]{
+  padding: 10px;
+  border: 1px solid #bbb;
+  border-radius: 6px;
+  font-size: 15px;
+}
+
 .btn-enviar {
   width: fit-content;
   background-color: #002734;
