@@ -54,18 +54,21 @@
     margin: 0 12px 10px;
 }
 
-.btn-ver-mais-evento {
-  background-color: #00d600;
+.btn-editar-evento {
+  background-color: #94a102;
   color: #ffffff;
-  font-size: 12px;
-  padding: 6px 12px;
+  font-size: 16px;
+  margin-right: 12px;
+  font-weight: bold;
+  padding: 12px 24px;
   border: none;
-  border-radius: 4px;
+  text-decoration: none;
+  border-radius: 8px;
   cursor: pointer;
 }
 
-.btn-ver-mais-evento:hover {
-  background-color: #076407;
+.btn-editar-evento:hover {
+  background-color:#454b00;
   color: #FFF;
 }
 

@@ -49,6 +49,30 @@
   border-radius: 4px;
 }
 
+.card input[type="date"]{
+  width: 100%;
+  padding: 8px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.card input[type="time"]{
+  width: 100%;
+  padding: 8px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.card input[type="number"]{
+  width: 100%;
+  padding: 8px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
 .card textarea {
   min-height: 80px;
   resize: vertical;
