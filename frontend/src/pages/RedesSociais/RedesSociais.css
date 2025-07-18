@@ -1,21 +1,21 @@
 
 
 .comunicacao-page {
-    position: relative; /* Contexto para o posicionamento absoluto da imagem */
-    background-color: rgba(253, 253, 253, 1);
+    
+    background-color: FDFDFD; 
     width: 100%;
-    overflow-x: hidden; /* Corta qualquer conteúdo que vaze horizontalmente */
+    min-height: 100vh;
 }
 
-/* Container do conteúdo principal */
+
 .comunicacao-container {
     max-width: 1180px;
     width: 100%;
     margin: 0 auto;
     padding: 2rem;
-    min-height: calc(100vh - 80px); /* Ocupa a altura da tela, descontando a navbar */
     display: flex;
     align-items: center;
+    min-height: calc(100vh - 80px); /* Ocupa a altura da tela, descontando a navbar */
 }
 
 /* Layout de duas colunas */
@@ -23,28 +23,20 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 2rem; /* Reduzimos um pouco o gap para acomodar a imagem 'vazando' */
+    gap: 3rem;
     width: 100%;
 }
 
+.left-column, .right-column {
+    flex: 1; 
+}
+
+/* Coluna da Esquerda */
 .left-column {
-    flex: 1;
     display: flex;
     flex-direction: column;
     gap: 2.5rem;
 }
-
-.right-column {
-    flex: 1.2; /* Damos um pouco mais de espaço para a coluna da imagem */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative; /* Contexto para a imagem se posicionar */
-    /* Garante que a coluna tenha altura para a imagem não vazar para baixo */
-    align-self: stretch; 
-}
-
-/* Coluna da Esquerda - Estilos do conteúdo */
 .left-column h1 {
     font-family: "Gabarito", serif;
     font-size: 2.8rem;
@@ -66,20 +58,21 @@
     color: #38D430;
 }
 .comunicacao-logo {
-    width: 270px;
+    width: 250px;
     height: auto;
 }
 
 
+.right-column {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .mao-celular-img {
-    position: absolute; /* Tira a imagem do fluxo normal do layout */
-    width: 45rem;       /* Tamanho grande para a imagem */
-    max-width: none;    /* Permite que a imagem seja maior que a coluna */
-    
-    /* Posiciona a imagem no centro vertical e um pouco para a direita */
-    top: 9.4rem;
-    left: 5rem; /* Ajuste este valor para mover mais para a direita ou esquerda */
-    transform: translateY(-50%);
+    max-width: 100%;
+    height: auto;
+   
 }
 
 
@@ -88,19 +81,13 @@
         flex-direction: column;
         text-align: center;
         padding-top: 3rem;
-        gap: 3rem;
-        /* Centraliza o conteúdo verticalmente no mobile */
-        justify-content: center; 
     }
     .left-column {
         align-items: center;
- 
     }
-
-
+    
+    /* Regra para esconder a imagem no mobile, como combinado */
     .right-column {
         display: none; 
     }
-    
-    
 }

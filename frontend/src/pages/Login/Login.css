@@ -1,10 +1,9 @@
-
 .login-page-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-background-color: #f8f9fa;
+  background-color: #f8f9fa;
   padding: 1rem;
   box-sizing: border-box;
 }
@@ -62,7 +61,7 @@ background-color: #f8f9fa;
   cursor: pointer;
   font-size: 1rem;
   font-weight: bold;
-  text-decoration: none; /* <-- REMOVE O SUBLINHADO */
+  text-decoration: none;
   transition: transform 0.2s;
 }
 .side-bar-login .button_btn_register:hover {
@@ -139,6 +138,34 @@ background-color: #f8f9fa;
 }
 
 
+
+
+/* 1. Container para o input e o ícone */
+.password-input-container {
+  position: relative;
+  width: 100%;
+  /* A margem de baixo que antes estava no input, agora fica no container */
+  margin-bottom: 1.5rem;
+}
+
+/* 2. Estilo e posicionamento do ícone */
+.password-toggle-icon {
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #888; /* Uma cor um pouco mais suave */
+  font-size: 1.2rem; /* Aumenta um pouco o tamanho do ícone */
+}
+
+/* 3. Ajuste no input de senha original */
+.login-info .login-password-input {
+  /* Adiciona um espaço na direita para o texto não ficar atrás do ícone */
+  padding-right: 50px !important;
+  /* Removemos a margem que agora está no container */
+  margin-bottom: 0;
+}
 
 
 @media (max-width: 768px) {

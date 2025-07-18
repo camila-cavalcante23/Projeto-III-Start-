@@ -4,14 +4,18 @@ import Navbar2 from '../../components/Navbar2/Navbar2';
 import api from '../../services/api';
 import { useNavigate, Link } from 'react-router-dom';
 
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
+
 const Register = () => {
-  
     const [name, setName] = useState('');
     const [cpf, setCpf] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
     const [password, setPassword] = useState('');
     
+    // NOVO: Estado para controlar a visibilidade da senha
+    const [showPassword, setShowPassword] = useState(false);
+
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [loading, setLoading] = useState(false);
@@ -23,7 +27,6 @@ const Register = () => {
         setError('');
         setSuccess('');
 
-        // Adicionando os novos campos ao objeto que será enviado
         const userData = {
             Name: name,
             Email: email,
@@ -71,7 +74,6 @@ const Register = () => {
                                 onChange={(e) => setName(e.target.value)}
                                 required
                             />
-                            {/* Adicionando de volta os campos no formulário */}
                             <label htmlFor="tax-number" className="register-tax-number-label">CPF:</label>
                             <input
                                 type="text"
@@ -99,13 +101,26 @@ const Register = () => {
                                 required
                             />
                             <label htmlFor="password" className="register-password-label">Senha:</label>
-                            <input
-                                type="password"
-                                className="register-password-input"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                required
-                            />
+                            
+                            
+                            <div className="password-input-container">
+                                <input
+                                    // O tipo muda dinamicamente
+                                    type={showPassword ? "text" : "password"}
+                                    className="register-password-input"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
+                                />
+                                <span 
+                                    className="password-toggle-icon" 
+                                    onClick={() => setShowPassword(!showPassword)}
+                                >
+                                    {/* O ícone muda dinamicamente */}
+                                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                                </span>
+                            </div>
+
                             <button type="submit" className="create-account-button" disabled={loading}>
                                 {loading ? 'Criando...' : 'Criar Conta'}
                             </button>
