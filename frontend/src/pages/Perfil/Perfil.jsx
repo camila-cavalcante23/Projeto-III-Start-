@@ -21,8 +21,7 @@ const Perfil = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        // 3. VERIFICAMOS SE O UTILIZADOR EXISTE NO CONTEXTO
-        // Se não houver 'user', significa que não está logado.
+
         if (!user) {
             navigate('/login');
             return;
@@ -30,8 +29,7 @@ const Perfil = () => {
 
         const fetchProfileData = async () => {
             try {
-                // O ID do utilizador agora vem diretamente do nosso objeto 'user' do contexto.
-                // A propriedade pode ser 'nameid' ou 'sub', dependendo de como o token foi gerado.
+                
                 const userId = user.nameid || user.sub;
 
                 // Buscamos os detalhes completos do utilizador
