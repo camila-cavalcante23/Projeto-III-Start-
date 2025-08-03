@@ -120,8 +120,8 @@ function NoticiaDetalhadas() {
       <Navbar2 />
       <main className='noticia-detalhada-container'>
         <div className="header-detalhes">
-          <Link to="/noticias" className="back-arrow-detalhes">←</Link>
-          <p>Notícias</p>
+          <Link to="/noticias" className="back-arrow-detalhes">Notícias</Link>
+        
         </div>
         <article className="noticia-article">
           <h1 className="noticia-titulo">{noticia.titulo}</h1>
