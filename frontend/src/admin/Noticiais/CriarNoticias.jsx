@@ -20,40 +20,47 @@ function CriarNoticias() {
 
         const reader = new FileReader();
 
-        // Define o que acontece quando a leitura do arquivo termina
         reader.onloadend = async () => {
-            const imagemBase64 = reader.result;
+            const base64String = reader.result;
 
-            // CORREÇÃO AQUI: Ajustando os nomes das propriedades para PascalCase
-            // para corresponder ao DTO do C# (SaveNewsRequest)
+            // --- Lógica de EXTRAÇÃO do CriarEvento APLICADA AQUI ---
+             // Extrai o tipo MIME e a extensão da imagem
+            const parts = base64String.split(';');
+            const mimeType = parts[0].split(':')[1]; // Ex: "image/png"
+            const extension = '.' + mimeType.split('/')[1]; // Ex: ".png"
+            const base64Data = parts[1].split(',')[1]; // Apenas a parte base64 pura
+
+            
+            // --- ESTRUTURA DO PAYLOAD IGUAL AO DO CriarEvento ---
+            const imageDetailsList = [{
+                Base64: base64Data,
+                Extension: extension
+            }];
+
             const payload = {
-                Title: titulo,          // Mudado de 'titulo' para 'Title'
-                Content: conteudo,      // Mudado de 'conteudo' para 'Content'
-                ImageBase64: imagemBase64 // Mudado de 'imagemBase64' para 'ImageBase64'
+                Title: titulo,
+                Content: conteudo,
+                ImageDetails: imageDetailsList // O nome da propriedade deve ser "ImageDetails"
             };
 
             try {
-                const response = await api.post('/News/SaveNews', payload);
+                await api.post('/News/SaveNews', payload);
 
                 setMensagem('Notícia enviada com sucesso!');
                 setTitulo('');
                 setConteudo('');
                 setImagem(null);
-                // Limpamos o campo de arquivo para o usuário
                 document.querySelector('input[type="file"]').value = '';
             } catch (error) {
                 console.error('Erro ao enviar notícia:', error);
-                // Melhorando a mensagem de erro para o usuário
                 setMensagem('Erro ao enviar notícia. Verifique os dados e tente novamente.');
                 if (error.response && error.response.data) {
                     console.error('Detalhes do erro do backend:', error.response.data);
-                    // Se o backend retornar uma mensagem de erro útil, exiba-a
                     setMensagem(error.response.data.message || 'Erro ao enviar notícia. Verifique os dados e tente novamente.');
                 }
             }
         };
 
-        // Inicia a leitura do arquivo. Quando terminar, o código acima em 'onloadend' será executado.
         reader.readAsDataURL(imagem);
     };
 
