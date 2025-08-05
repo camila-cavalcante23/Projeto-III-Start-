@@ -17,41 +17,36 @@ function NoticiaDetalhadas() {
         setLoading(true);
         setError('');
 
+        // Verifica se o ID é válido antes de fazer a requisição
+        if (!id || id === 'undefined') {
+          setError("ID da notícia não fornecido na URL.");
+          setLoading(false);
+          return;
+        }
+
         const response = await api.get(`/News/${id}`); 
-        
         const newsData = response.data.data || response.data;
 
-        // --- AJUSTE AQUI PARA LER A IMAGEM BASE64 ---
-        let finalImageUrl = 'https://via.placeholder.com/800x500?text=Imagem+N%C3%A3o+Dispon%C3%ADvel';
+        // --- LÓGICA CORRIGIDA PARA LER A IMAGEM BASE64 DO ARRAY imageDetails ---
+        const imageDetailsArray = newsData.imageDetails || newsData.ImageDetails;
+        const primeiraImagem = imageDetailsArray && imageDetailsArray.length > 0 ? imageDetailsArray[0] : null;
         
-        // Verifique se o backend retorna a string Base64 (ex: newsData.base64Image ou newsData.ImageBase64)
-        // E adicione o prefixo correto para a tag <img>
-        if (newsData.base64Image || newsData.ImageBase64) {
-            // Supondo que o tipo da imagem seja PNG. Se for outro tipo (JPG, JPEG), ajuste 'image/png'.
-            // O ideal é que sua API também retorne o contentType da imagem (ex: newsData.imageContentType).
-            const base64String = newsData.base64Image || newsData.ImageBase64;
-            // Verifica se a string Base64 já inclui o prefixo "data:image/..."
-            if (base64String && !base64String.startsWith('data:')) {
-                // Se não incluir, adicione o prefixo (assumindo PNG, mas idealmente seria dinâmico)
-                finalImageUrl = `data:image/png;base64,${base64String}`; 
-            } else {
-                // Se já incluir (ex: "data:image/jpeg;base64,..."), use-a diretamente
-                finalImageUrl = base64String;
-            }
-        }
-        // Se a API ainda retornar uma URL normal (http/https), esta parte abaixo a sobreporia
-        // if (newsData.imageUrl || newsData.ImageUrl) {
-        //     finalImageUrl = newsData.imageUrl || newsData.ImageUrl;
-        // }
-        // ---------------------------------------------
+        let finalImageUrl = 'https://via.placeholder.com/800x500?text=Imagem+N%C3%A3o+Dispon%C3%ADvel';
 
+        if (primeiraImagem && primeiraImagem.base64 && primeiraImagem.extension) {
+          const extensionWithoutDot = primeiraImagem.extension.startsWith('.')
+            ? primeiraImagem.extension.substring(1)
+            : primeiraImagem.extension;
+          finalImageUrl = `data:image/${extensionWithoutDot};base64,${primeiraImagem.base64}`;
+        }
+        // ------------------------------------------------------------------------
 
         setNoticia({
           id: newsData.id || newsData.Id,
           titulo: newsData.title || newsData.Title || 'Sem Título',
           conteudo: newsData.content || newsData.Content || 'Nenhum conteúdo disponível.',
           dataCriacao: newsData.createdAt || newsData.CreatedAt || new Date().toISOString(),
-          imageUrl: finalImageUrl // Usa a URL Base64 ou o placeholder
+          imageUrl: finalImageUrl
         });
 
       } catch (err) {
@@ -66,13 +61,8 @@ function NoticiaDetalhadas() {
       }
     };
 
-    if (id) { 
-      fetchNoticia();
-    } else {
-      setLoading(false);
-      setError("ID da notícia não fornecido na URL.");
-    }
-  }, [id]);
+    fetchNoticia();
+  }, [id]); // A dependência [id] está correta aqui
 
   if (loading) {
     return (
@@ -132,12 +122,14 @@ function NoticiaDetalhadas() {
           </p>
           <div className="image-wrapper">
             <div className="dots dots-left"></div>
-            {/* O src agora receberá a string Base64 com o prefixo ou o placeholder */}
             <img 
               src={noticia.imageUrl} 
               alt={noticia.titulo} 
               className="noticia-imagem-principal" 
-              onError={(e) => { e.target.onerror = null; e.target.src = 'https://via.placeholder.com/800x500?text=Erro+ao+carregar+imagem'; }}
+              onError={(e) => { 
+                e.target.onerror = null; 
+                e.target.src = 'https://via.placeholder.com/800x500?text=Imagem+N%C3%A3o+Dispon%C3%ADvel'; 
+              }}
             />
             <div className="dots dots-right"></div>
           </div>
