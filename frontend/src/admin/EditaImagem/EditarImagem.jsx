@@ -1,88 +1,112 @@
 import React, { useEffect, useState } from "react";
-import "./EditarImagem.css"; // Assuming this CSS exists
-
+import "./EditarImagem.css";
 import api from "../../services/api";
 import NavbarAdmin from "../../components/Navbar/NavbarAdmin";
-import { useAuth } from '../../context/AuthContext'; // Import useAuth
+import { useAuth } from '../../context/AuthContext';
 
 function EditarImagem() {
-    const [imagens, setImagens] = useState([]); // Will store gallery items, each with its images
-    const [mensagem, setMensagem] = useState(''); // For user feedback
+    const [galerias, setGalerias] = useState([]);
+    const [galeriaSelecionada, setGaleriaSelecionada] = useState(null);
+    const [mensagem, setMensagem] = useState('');
+    const [loading, setLoading] = useState(true);
 
-    const { user } = useAuth(); // Get user from AuthContext
+    const { user } = useAuth();
 
-    // Effect to set Authorization header for all API calls
     useEffect(() => {
         const token = localStorage.getItem('authToken');
         if (token) {
             api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            fetchGalerias();
         } else {
-            // Limpa o cabeçalho se não houver token (útil após logout)
-            delete api.defaults.headers.common['Authorization'];
             setMensagem("Você não está autenticado. Faça login para acessar.");
+            setLoading(false);
         }
-    }, [user]); // Re-run when user object changes (e.g., after login/logout)
+    }, [user]);
 
-    // Effect to fetch images on component mount and when authentication status changes
-    useEffect(() => {
-        // Only fetch if user is authenticated (or if token is present, depending on your auth flow)
-        // A rota GET /Gallery não requer autorização, então podemos tentar buscar sempre.
-        // Se a rota GET /Gallery no seu backend exigir autenticação, descomente a linha abaixo.
-        // if (localStorage.getItem('authToken')) {
-            fetchImagens();
-        // } else {
-        //     setMensagem("Faça login para ver e editar as imagens da galeria.");
-        // }
-    }, [user]); // Re-fetch when user object changes (e.g., after login)
-
-    const fetchImagens = async () => {
+    const fetchGalerias = async () => {
+        setLoading(true);
+        setMensagem('');
         try {
-            // Endpoint for getting all gallery items
             const response = await api.get("/Gallery");
-            
-            // ADIÇÃO PARA DEBUG: Logar a resposta completa do backend
-            console.log("Resposta completa do backend para /Gallery:", response.data);
-            
-            // CORREÇÃO AQUI: Acessar response.data.data para obter o array real
-            // Assuming response.data.data is a list of GalleryResponseDTO
-            // Each GalleryResponseDTO has Id, Title, ImageDetails (List<ImageDetailsDTO>), UserId
-            const fetchedGalleryItems = response.data.data.map(item => { // Alterado de response.data.map para response.data.data.map
-                // ADIÇÃO PARA DEBUG: Logar cada item da galeria
-                console.log("Processando item da galeria:", item);
-
+            const fetchedGalleryItems = response.data.data.map(item => {
                 const displayUrl = (item.imageDetails && item.imageDetails.length > 0)
                     ? `data:image/${item.imageDetails[0].extension.substring(1)};base64,${item.imageDetails[0].base64}`
                     : 'https://placehold.co/150x150';
-                
-                // ADIÇÃO PARA DEBUG: Logar a URL de exibição gerada
-                console.log("URL de exibição gerada:", displayUrl);
-
                 return {
                     id: item.id,
-                    titulo: item.title, // Map Title from backend to titulo for frontend
+                    titulo: item.title,
                     userId: item.userId,
-                    imageDetails: item.imageDetails || [], // Store the full image details list
+                    imageDetails: item.imageDetails || [],
                     displayUrl: displayUrl
                 };
             });
-            setImagens(fetchedGalleryItems);
-            setMensagem(""); // Clear message on successful fetch
+            setGalerias(fetchedGalleryItems);
         } catch (err) {
-            console.error("Erro ao buscar imagens da galeria:", err);
-            setMensagem("Erro ao carregar imagens da galeria. Verifique sua conexão ou autenticação.");
+            console.error("Erro ao buscar galerias:", err);
+            setMensagem("Erro ao carregar galerias. Verifique sua conexão ou autenticação.");
+        } finally {
+            setLoading(false);
         }
     };
 
-    // Handles changes for text inputs (like title)
-    const handleChange = (id, field, value) => {
-        setImagens((prev) =>
-            prev.map((item) => (item.id === id ? { ...item, [field]: value } : item))
-        );
+    const handleSalvarGaleria = async () => {
+        if (!galeriaSelecionada) return;
+
+        const currentUserId = galeriaSelecionada.userId || (user ? (user.nameid || user.sub) : null);
+        if (!currentUserId) {
+            setMensagem("Erro: ID do usuário não disponível para salvar a galeria.");
+            return;
+        }
+
+        const imageDetailsPayload = galeriaSelecionada.imageDetails.map(img => ({
+            Id: img.id,
+            Base64: img.base64,
+            Extension: img.extension
+        }));
+
+        const payload = {
+            Id: galeriaSelecionada.id,
+            Title: galeriaSelecionada.titulo,
+            ImageDetails: imageDetailsPayload,
+            UserId: currentUserId
+        };
+        
+        try {
+            // CORREÇÃO: Adicionamos o ID da galeria à URL da requisição PUT
+            await api.put(`/Gallery`, payload);
+            
+            setMensagem("Galeria salva com sucesso!");
+            setGaleriaSelecionada(null);
+            fetchGalerias();
+        } catch (err) {
+            console.error("Erro ao salvar galeria:", err);
+            setMensagem("Erro ao salvar galeria. Tente novamente.");
+            if (err.response && err.response.data) {
+                setMensagem(err.response.data.message || 'Erro ao salvar galeria.');
+            }
+        }
+    };
+    
+    const handleExcluirGaleria = async (galleryId) => {
+      try {
+        await api.delete(`/Gallery/${galleryId}`);
+        setGalerias(prev => prev.filter(g => g.id !== galleryId));
+        setMensagem("Galeria excluída com sucesso!");
+      } catch (err) {
+        console.error("Erro ao excluir galeria:", err);
+        setMensagem("Erro ao excluir galeria. Tente novamente.");
+      }
     };
 
-    // Handles changes for file input (new image upload)
-    const handleImageFileChange = async (id, file) => {
-        if (!file) return;
+    const handleExcluirImagem = (imageId) => {
+        if (!galeriaSelecionada) return;
+        const novasImagens = galeriaSelecionada.imageDetails.filter(img => img.id !== imageId);
+        setGaleriaSelecionada({ ...galeriaSelecionada, imageDetails: novasImagens });
+        setMensagem("Imagem removida localmente. Clique em 'Salvar Galeria' para confirmar a exclusão.");
+    };
+
+    const handleAlterarImagem = async (imageId, file) => {
+        if (!file || !galeriaSelecionada) return;
 
         const reader = new FileReader();
         reader.onloadend = () => {
@@ -91,111 +115,137 @@ function EditarImagem() {
             const mimeType = parts[0].split(':')[1];
             const extension = '.' + mimeType.split('/')[1];
             const base64Data = parts[1].split(',')[1];
-
-            setImagens((prev) =>
-                prev.map((item) =>
-                    item.id === id
-                        ? {
-                              ...item,
-                              // Replace existing image details with new one (assuming one image per gallery item for simplicity)
-                              imageDetails: [{ Base64: base64Data, Extension: extension }], 
-                              displayUrl: `data:image/${extension.substring(1)};base64,${base64Data}`
-                          }
-                        : item
-                )
+    
+            const novasImagens = galeriaSelecionada.imageDetails.map(img =>
+                img.id === imageId
+                    ? { ...img, base64: base64Data, extension: extension, displayUrl: `data:${mimeType};base64,${base64Data}` }
+                    : img
             );
+            
+            setGaleriaSelecionada({ ...galeriaSelecionada, imageDetails: novasImagens });
+            setMensagem("Imagem alterada localmente. Clique em 'Salvar Galeria' para confirmar a alteração.");
         };
         reader.readAsDataURL(file);
     };
 
+    const handleAdicionarNovaImagem = async (file) => {
+        if (!file || !galeriaSelecionada) return;
 
-    const handleSalvar = async (id) => {
-        const itemToSave = imagens.find((i) => i.id === id);
-        if (!itemToSave) {
-            setMensagem("Item da galeria não encontrado para salvar.");
-            return;
-        }
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            const base64String = reader.result;
+            const parts = base64String.split(';');
+            const mimeType = parts[0].split(':')[1];
+            const extension = '.' + mimeType.split('/')[1];
+            const base64Data = parts[1].split(',')[1];
+            
+            const novaImagem = {
+                id: `temp-${Date.now()}`,
+                base64: base64Data,
+                extension: extension,
+                displayUrl: `data:${mimeType};base64,${base64Data}`
+            };
 
-        // Ensure UserId is available, either from state or AuthContext
-        const currentUserId = itemToSave.userId || (user ? (user.nameid || user.sub) : null);
-        if (!currentUserId) {
-            setMensagem("Erro: ID do usuário não disponível para salvar a imagem. Faça login novamente.");
-            return;
-        }
-
-        // CORREÇÃO AQUI: Ajustando os nomes das propriedades para PascalCase
-        const payload = {
-            Id: itemToSave.id, // Mudado de 'id' para 'Id'
-            Title: itemToSave.titulo, // Mudado de 'title' para 'Title'
-            ImageDetails: itemToSave.imageDetails, // Mudado de 'imageDetails' para 'ImageDetails'
-            UserId: currentUserId // Mudado de 'userId' para 'UserId'
+            setGaleriaSelecionada({
+                ...galeriaSelecionada,
+                imageDetails: [...galeriaSelecionada.imageDetails, novaImagem]
+            });
+            setMensagem("Nova imagem adicionada localmente. Clique em 'Salvar Galeria' para finalizar.");
         };
-
-        try {
-            // Endpoint for updating a gallery item
-            await api.put("/Gallery", payload); // PUT to /Gallery
-            setMensagem("Imagem da galeria salva com sucesso!");
-            fetchImagens(); // Re-fetch to ensure data consistency and update UI
-        } catch (err) {
-            console.error("Erro ao salvar imagem da galeria:", err);
-            setMensagem("Erro ao salvar imagem da galeria. Tente novamente.");
-            if (err.response && err.response.data) {
-                console.error('Detalhes do erro do backend (JSON):', JSON.stringify(err.response.data, null, 2));
-                setMensagem(err.response.data.message || 'Erro ao salvar imagem da galeria.');
-            }
-        }
+        reader.readAsDataURL(file);
     };
 
-    const handleExcluir = async (id) => {
-        try {
-            // Endpoint for deleting a gallery item
-            await api.delete(`/Gallery/${id}`); // DELETE to /Gallery/{id}
-            setImagens((prev) => prev.filter((i) => i.id !== id));
-            setMensagem("Imagem da galeria excluída com sucesso!");
-        } catch (err) {
-            console.error("Erro ao excluir imagem da galeria:", err);
-            setMensagem("Erro ao excluir imagem da galeria. Tente novamente.");
-            if (err.response && err.response.data) {
-                console.error('Detalhes do erro do backend (JSON):', JSON.stringify(err.response.data, null, 2));
-                setMensagem(err.response.data.message || 'Erro ao excluir imagem da galeria.');
-            }
-        }
-    };
+    if (loading) {
+        return (
+            <div className="loading-container">
+                <NavbarAdmin />
+                <p>Carregando imagens...</p>
+            </div>
+        );
+    }
+
+    if (galeriaSelecionada) {
+        return (
+            <div className="editar-imagem">
+                <NavbarAdmin />
+                <div className="container-editar">
+                    <h2>Editando Galeria: {galeriaSelecionada.titulo}</h2>
+                    <button className="back-button" onClick={() => setGaleriaSelecionada(null)}>
+                        &larr; Voltar para as Galerias
+                    </button>
+                    {mensagem && <p className="mensagem">{mensagem}</p>}
+                    
+                    <div className="card-buttons top-buttons">
+                        <button className="salvar" onClick={handleSalvarGaleria}>
+                            Salvar Galeria
+                        </button>
+                    </div>
+
+                    <div className="adicionar-imagem-form">
+                        <label>Adicionar Nova Imagem:</label>
+                        <input 
+                            type="file" 
+                            accept="image/*" 
+                            onChange={(e) => handleAdicionarNovaImagem(e.target.files[0])}
+                        />
+                    </div>
+                    
+                    <div className="grid-cards">
+                        {galeriaSelecionada.imageDetails.map((imagem) => (
+                            <div className="card" key={imagem.id || `temp-${Math.random()}`}>
+                                <img 
+                                    src={imagem.displayUrl || `data:image/${imagem.extension.substring(1)};base64,${imagem.base64}`}
+                                    alt={`Imagem da galeria ${galeriaSelecionada.titulo}`} 
+                                />
+                                <div className="card-buttons">
+                                    <label className="file-upload-label">
+                                        Substituir Imagem
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            className="hidden-file-input"
+                                            onChange={(e) => handleAlterarImagem(imagem.id, e.target.files[0])}
+                                        />
+                                    </label>
+                                    <button 
+                                        className="excluir" 
+                                        onClick={() => handleExcluirImagem(imagem.id)}>
+                                        Excluir
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="editar-imagem">
             <NavbarAdmin />
             <div className="container-editar">
-                <h2>Editar Imagens da Galeria</h2>
-                {mensagem && <p className="mensagem">{mensagem}</p>} {/* Display messages */}
+                <h2>Selecione uma Galeria para Editar</h2>
+                {mensagem && <p className="mensagem">{mensagem}</p>}
                 <div className="grid-cards">
-                    {imagens.map((imagem) => (
-                        <div className="card" key={imagem.id}>
-                            <img src={imagem.displayUrl} alt={imagem.titulo} />
-                            <label>Título:</label>
-                            <input
-                                type="text"
-                                value={imagem.titulo}
-                                onChange={(e) => handleChange(imagem.id, "titulo", e.target.value)}
-                            />
-
-                            <label>Alterar Imagem:</label>
-                            <input
-                                type="file"
-                                accept="image/*"
-                                onChange={(e) => handleImageFileChange(imagem.id, e.target.files[0])}
-                            />
-
-                            <div className="card-buttons">
-                                <button className="salvar" onClick={() => handleSalvar(imagem.id)}>
-                                    Salvar
-                                </button>
-                                <button className="excluir" onClick={() => handleExcluir(imagem.id)}>
-                                    Excluir
-                                </button>
+                    {galerias.length > 0 ? (
+                        galerias.map((galeria) => (
+                            <div className="card-galeria" key={galeria.id} onClick={() => setGaleriaSelecionada(galeria)}>
+                                <img src={galeria.displayUrl} alt={galeria.titulo} />
+                                <h3>{galeria.titulo}</h3>
+                                <div className="botoes-galeria">
+                                    <button onClick={(e) => { e.stopPropagation(); setGaleriaSelecionada(galeria); }}>
+                                        Editar
+                                    </button>
+                                    <button onClick={(e) => { e.stopPropagation(); handleExcluirGaleria(galeria.id); }}>
+                                        Excluir Galeria
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        ))
+                    ) : (
+                        <p>Nenhuma galeria encontrada.</p>
+                    )}
                 </div>
             </div>
         </div>
