@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-// Importamos o Link para a navegação
 import { useNavigate, useParams, Link } from 'react-router-dom'; 
 import './Inscricao.css';
 import Navbar2 from "../../components/Navbar2/Navbar2";
@@ -34,7 +33,7 @@ const Inscricao = () => {
                     if (eventIdFromUrl) {
                         const idNumerico = parseInt(eventIdFromUrl, 10);
                         if (eventosFuturos.some(e => e.id === idNumerico)) {
-                           setSelectedEvents([idNumerico]);
+                            setSelectedEvents([idNumerico]);
                         }
                     }
                 } else {
@@ -82,12 +81,8 @@ const Inscricao = () => {
             return;
         }
 
-        // ================== AJUSTE PARA ERRO 401 (UNAUTHORIZED) ==================
-        
-        // 1. Pegamos o token de autenticação do Local Storage.
         const token = localStorage.getItem('authToken');
 
-        // 2. Adicionamos uma verificação: se não houver token, o usuário não está logado.
         if (!token) {
             setError("Sua sessão expirou. Por favor, faça login novamente.");
             setLoading(false);
@@ -95,31 +90,37 @@ const Inscricao = () => {
             return;
         }
 
-        // 3. Montamos as requisições, agora INCLUINDO o cabeçalho (headers) de autorização.
+        
         const inscricaoPromises = selectedEvents.map(eventId => {
+           
+            const inscricaoData = {
+                userId: parseInt(userId, 10),
+                eventId: eventId
+            };
+
+            
             return api.post(
-                `/event/signup?userId=${userId}&eventId=${eventId}`,
-                {}, // Corpo da requisição (pode ser um objeto vazio)
-                {   // Opções da requisição, incluindo o cabeçalho com o token
+                '/event/signup', // A URL fica "limpa"
+                inscricaoData,   // Os dados vão aqui
+                { 
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 }
             );
         });
-        // =======================================================================
-
-
+        
         try {
             await Promise.all(inscricaoPromises);
             setSuccess('Inscrição(ões) realizada(s) com sucesso!');
             setTimeout(() => navigate('/perfil'), 2000); 
         } catch (err) {
-            // Ajuste na mensagem de erro para incluir o status 401
             if (err.response && err.response.status === 401) {
                 setError("Você não tem autorização. Faça login novamente.");
             } else {
-                setError(err.response?.data?.message || 'Erro ao realizar uma ou mais inscrições.');
+                
+                const errorMessage = err.response?.data?.message || 'Erro ao realizar uma ou mais inscrições.';
+                setError(errorMessage);
             }
         } finally {
             setLoading(false);
@@ -136,7 +137,6 @@ const Inscricao = () => {
                     </header>
                     <main className="main-content">
                         
-                        {/* AJUSTE: Trocando tags <a> por <Link> para navegação de SPA */}
                         <div className="options-menu">
                             <Link to="/inscricao" className="option-link active">
                                 <span className="icon-edit"></span> Inscreva-se

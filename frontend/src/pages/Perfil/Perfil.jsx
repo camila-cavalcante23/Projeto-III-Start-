@@ -4,23 +4,18 @@ import seta from '../../assets/seta2.png';
 import logo from '../../assets/StartUFC-logo-verde.png';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../../services/api';
-
-// 1. IMPORTAMOS O NOSSO GESTOR DE AUTENTICAÇÃO
 import { useAuth } from '../../context/AuthContext';
 
 const Perfil = () => {
-    
     const { user, logout } = useAuth();
     
-    // Este estado guardará os detalhes completos do utilizador que vêm da API
     const [userDetails, setUserDetails] = useState(null);
-    const [eventos, setEventos] = useState([]); // Mantemos o estado para os eventos
+    const [eventos, setEventos] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
-
         if (!user) {
             navigate('/login');
             return;
@@ -28,13 +23,23 @@ const Perfil = () => {
 
         const fetchProfileData = async () => {
             try {
-                
                 const userId = user.nameid || user.sub;
 
-                // Buscamos os detalhes completos do utilizador
-                const userResponse = await api.get(`/user/${userId}`);
-                setUserDetails(userResponse.data.data);
+                
+                const [userResponse, eventosResponse] = await Promise.all([
+                    api.get(`/user/${userId}`),
+                    api.get(`/event/user-events/${userId}`) 
+                ]);
+                
+                if (userResponse.data?.data) {
+                    setUserDetails(userResponse.data.data);
+                }
 
+                if (eventosResponse.data?.data?.eventList) {
+                    setEventos(eventosResponse.data.data.eventList);
+                } else {
+                    setEventos([]);
+                }
 
             } catch (err) {
                 console.error("Erro ao buscar dados do perfil:", err);
@@ -45,20 +50,18 @@ const Perfil = () => {
         };
 
         fetchProfileData();
-    }, [user, navigate]); 
-   
+    }, [user, navigate]);
+
     const handleLogout = () => {
         logout();
         navigate('/login');
     };
 
     const handleDeleteAccount = async () => {
-       
         if (confirm("Tem certeza que deseja excluir sua conta? Esta ação não pode ser desfeita.")) {
             try {
                 const userId = user.nameid || user.sub;
                 await api.delete(`/user/${userId}`);
-                
                 handleLogout(); 
             } catch (err) {
                 console.error("Erro ao excluir conta:", err);
@@ -81,34 +84,30 @@ const Perfil = () => {
              <Link to="/">
               <img src={seta} alt="Voltar" className="seta" />
              </Link>
-
              <div className="nav-center">
              <img src={logo} alt="logo" className="logo" />
-            
              </div>
-             </div>
-
+            </div>
             <div className="Nav1"></div>
             <div className="perfil-container">
                 <h2>Perfil do Usuário</h2>
                 <div className="traco1"></div>
-              
                 {userDetails ? (
                     <>
                         <img src={userDetails.foto || 'https://placehold.co/150x150/a7e5d5/333333?text=Perfil'} alt="Foto do usuário" className="foto-perfil" />
                         <p><strong>Nome:</strong> {userDetails.name}</p>
                         <p><strong>Email:</strong> {userDetails.email}</p>
-                  
                         <p><strong>CPF:</strong> {userDetails.cpf || 'Não informado'}</p>
                         <p><strong>Telefone:</strong> {userDetails.phone || 'Não informado'}</p>
                         
                         <div className="traco2"></div>
                         <h3 className="config">Eventos Cadastrados</h3>
+                        
                         {eventos.length > 0 ? (
                             <ul className="eventos-lista">
-                                {eventos.map(ev => (
-                                    <li key={ev.id}>
-                                        <strong>{ev.titulo}</strong> - {new Date(ev.data).toLocaleDateString('pt-BR')}
+                                {eventos.map(event => (
+                                    <li key={event.id}>
+                                        <strong>{event.name}</strong> - {new Date(event.date).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}
                                     </li>
                                 ))}
                             </ul>
