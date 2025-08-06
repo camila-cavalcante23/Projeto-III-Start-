@@ -21,22 +21,17 @@ const getMimeType = (ext) => {
     }
 };
 
-const nomesMeses = [
-  "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-  "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
-];
-
 const Galeria = () => {
     const [galerias, setGalerias] = useState([]);
     const [galeriasFiltradas, setGaleriasFiltradas] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    
+    // Deixamos apenas o filtro de título
+    const [filtroTitulo, setFiltroTitulo] = useState('');
+    const [titulosDisponiveis, setTitulosDisponiveis] = useState([]);
 
-    const [filtroAno, setFiltroAno] = useState('');
-    const [filtroMes, setFiltroMes] = useState('');
-    const [anosDisponiveis, setAnosDisponiveis] = useState([]);
-    const [mesesDisponiveis, setMesesDisponiveis] = useState([]); // NOVO estado
-
+    // Efeito para buscar os dados da API
     useEffect(() => {
         const fetchGalerias = async () => {
             setLoading(true);
@@ -44,10 +39,7 @@ const Galeria = () => {
             try {
                 const response = await api.get('/Gallery');
                 if (response.data && Array.isArray(response.data.data)) {
-                    let dados = response.data.data;
-                    dados.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
-                    const galeriasComImagensFormatadas = dados.map(galeria => {
+                    const galeriasComImagensFormatadas = response.data.data.map(galeria => {
                         const imagensFormatadas = (galeria.imageDetails || [])
                             .map(imageDetails => {
                                 if (imageDetails.base64 && imageDetails.extension) {
@@ -58,7 +50,28 @@ const Galeria = () => {
                                 return null;
                             })
                             .filter(imgUrl => imgUrl !== null);
-                        return { ...galeria, formattedImages: imagensFormatadas };
+
+                        let dataCriacao = null;
+                        if (galeria.createdAt) {
+                            const dataObjeto = new Date(galeria.createdAt);
+                            dataCriacao = !isNaN(dataObjeto.getTime()) ? dataObjeto : null;
+                        }
+
+                        const dataParaExibir = dataCriacao || new Date();
+                        const dataFormatada = dataParaExibir.toLocaleDateString('pt-BR', { year: 'numeric', month: '2-digit', day: '2-digit' });
+
+                        return {
+                            ...galeria,
+                            formattedImages: imagensFormatadas,
+                            formattedDate: dataFormatada,
+                            dateObject: dataCriacao
+                        };
+                    });
+                    
+                    galeriasComImagensFormatadas.sort((a, b) => {
+                        const dateA = a.dateObject || new Date(0);
+                        const dateB = b.dateObject || new Date(0);
+                        return dateB.getTime() - dateA.getTime();
                     });
 
                     setGalerias(galeriasComImagensFormatadas);
@@ -71,6 +84,8 @@ const Galeria = () => {
             } catch (err) {
                 console.error("Erro ao buscar galerias:", err);
                 setError("Não foi possível carregar a galeria.");
+                setGalerias([]);
+                setGaleriasFiltradas([]);
             } finally {
                 setLoading(false);
             }
@@ -78,53 +93,31 @@ const Galeria = () => {
         fetchGalerias();
     }, []);
 
-    // NOVO useEffect para extrair anos e meses após o carregamento
+    // Efeito para popular os títulos disponíveis
     useEffect(() => {
         if (galerias.length > 0) {
-            // Extrai e ordena os anos únicos
-            const anosUnicos = Array.from(new Set(
-                galerias.map(g => new Date(g.createdAt).getFullYear())
-            )).sort((a, b) => b - a);
-            setAnosDisponiveis(["", ...anosUnicos]);
+            const titulosUnicos = Array.from(new Set(
+                galerias.map(g => g.title)
+            )).sort((a, b) => a.localeCompare(b));
 
-            // Extrai os meses únicos do ano selecionado
-            const mesesDoAnoSelecionado = new Set(
-                galerias
-                    .filter(g => filtroAno === '' || new Date(g.createdAt).getFullYear().toString() === filtroAno)
-                    .map(g => (new Date(g.createdAt).getMonth() + 1).toString().padStart(2, '0'))
-            );
-            
-            const mesesDisponiveisFormatados = Array.from(mesesDoAnoSelecionado)
-              .sort()
-              .map(mesNum => ({
-                value: mesNum,
-                label: nomesMeses[parseInt(mesNum, 10) - 1]
-              }));
-              
-            setMesesDisponiveis([{ value: "", label: "Todos os Meses" }, ...mesesDisponiveisFormatados]);
+            setTitulosDisponiveis(["", ...titulosUnicos]);
         } else {
-          setAnosDisponiveis([]);
-          setMesesDisponiveis([]);
+            setTitulosDisponiveis([]);
         }
-    }, [galerias, filtroAno]);
+    }, [galerias]);
 
+    // Efeito para filtrar as galerias apenas pelo título
     useEffect(() => {
         let filtradas = galerias;
 
-        if (filtroAno) {
-            filtradas = filtradas.filter(galeria =>
-                new Date(galeria.createdAt).getFullYear().toString() === filtroAno
+        if (filtroTitulo) {
+            filtradas = filtradas.filter(galeria => 
+                galeria.title === filtroTitulo
             );
         }
 
-        if (filtroMes) {
-            filtradas = filtradas.filter(galeria => {
-                const mes = (new Date(galeria.createdAt).getMonth() + 1).toString().padStart(2, '0');
-                return mes === filtroMes;
-            });
-        }
         setGaleriasFiltradas(filtradas);
-    }, [filtroAno, filtroMes, galerias]);
+    }, [filtroTitulo, galerias]);
 
     return (
         <div className="pagina-galeria">
@@ -134,35 +127,15 @@ const Galeria = () => {
 
                 <div className="galeria-filtros">
                     <div className="filtro-item">
-                        <label htmlFor="filtro-ano">Ano:</label>
+                        <label htmlFor="filtro-titulo">Título:</label>
                         <select
-                            id="filtro-ano"
+                            id="filtro-titulo"
                             className="galeria-select-filtro"
-                            value={filtroAno}
-                            onChange={(e) => {
-                                setFiltroAno(e.target.value);
-                                setFiltroMes('');
-                            }}
+                            value={filtroTitulo}
+                            onChange={(e) => setFiltroTitulo(e.target.value)}
                         >
-                            <option value="">Todos os Anos</option>
-                            {anosDisponiveis.map(ano => (
-                                <option key={ano} value={ano}>{ano}</option>
-                            ))}
-                        </select>
-                    </div>
-                    <div className="filtro-item">
-                        <label htmlFor="filtro-mes">Mês:</label>
-                        <select
-                            id="filtro-mes"
-                            className="galeria-select-filtro"
-                            value={filtroMes}
-                            onChange={(e) => setFiltroMes(e.target.value)}
-                            disabled={!filtroAno}
-                        >
-                            {mesesDisponiveis.map(mes => (
-                                <option key={mes.value} value={mes.value}>
-                                    {mes.label}
-                                </option>
+                            {titulosDisponiveis.map(titulo => (
+                                <option key={titulo} value={titulo}>{titulo === "" ? "Todos os Títulos" : titulo}</option>
                             ))}
                         </select>
                     </div>
@@ -179,7 +152,7 @@ const Galeria = () => {
                         <div key={galeria.id} className="galeria-evento">
                             <h2 className="galeria-evento-titulo">{galeria.title}</h2>
                             <p className="galeria-evento-data">
-                                Data: {new Date(galeria.createdAt).toLocaleDateString()}
+                                Data: {galeria.formattedDate}
                             </p>
                             <Carrossel imagens={galeria.formattedImages} />
                         </div>

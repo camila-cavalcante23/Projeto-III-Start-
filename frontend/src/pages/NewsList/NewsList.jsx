@@ -19,13 +19,14 @@ const NewsList = () => {
                 if (response.data && Array.isArray(response.data.data)) {
                     let dados = response.data.data;
 
-                    // --- LÓGICA DE ORDENAÇÃO ADICIONADA AQUI ---
-                    // Ordena os dados em ordem decrescente de data de criação
-                    // para que as notícias mais recentes apareçam primeiro.
-                    dados.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-                    // ------------------------------------------
-
-                    setNewsList(dados);
+                    // Lógica de ordenação pela data de criação
+                    const dadosOrdenados = dados.slice().sort((a, b) => {
+                        const dateA = new Date(a.createdAt);
+                        const dateB = new Date(b.createdAt);
+                        return dateB - dateA;
+                    });
+                    
+                    setNewsList(dadosOrdenados);
                 } else {
                     console.error("Erro: Os dados recebidos da API não são um array!", response.data);
                     setNewsList([]);
@@ -62,18 +63,26 @@ const NewsList = () => {
             ) : (
                 <>
                     <div className='news-grid'>
-                        {newsList.slice(0, 3).map((news) => (
-                            <div key={news.id} className="news-card">
-                                <img src={news.imgURL || 'https://placehold.co/600x400/a7e5d5/333333?text=Notícia'} alt={news.title} className="news-image" />
-                                <div className="card-content">
-                                    <h3>{news.title}</h3>
-                                    <p>{`${news.content.substring(0, 150)}...`}</p>
-                                    <Link to={`/noticiasDetalhadas/${news.id}`}>
-                                        <button className="ler-mais-btn">Ler mais</button>
-                                    </Link>
+                        {newsList.slice(0, 3).map((news) => {
+                            // CORREÇÃO: Criamos a URL da imagem em Base64
+                            const imageDetails = news.imageDetails && news.imageDetails[0];
+                            const imageUrl = imageDetails && imageDetails.base64 && imageDetails.extension
+                                ? `data:image/${imageDetails.extension.replace('.', '')};base64,${imageDetails.base64}`
+                                : 'https://placehold.co/600x400/a7e5d5/333333?text=Sem+Imagem';
+                            
+                            return (
+                                <div key={news.id} className="news-card">
+                                    <img src={imageUrl} alt={news.title} className="news-image" />
+                                    <div className="card-content">
+                                        <h3>{news.title}</h3>
+                                        <p>{`${news.content.substring(0, 150)}...`}</p>
+                                        <Link to={`/noticiasDetalhadas/${news.id}`}>
+                                            <button className="ler-mais-btn">Ler mais</button>
+                                        </Link>
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
 
                     <div className='all-news-button-container'>
